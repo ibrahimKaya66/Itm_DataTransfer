@@ -1,36 +1,31 @@
-﻿using AutoMapper;
-using ItmProject.Business.Methods.Abstract;
-using ItmProject.Business.Services.Abstract;
-using ItmProject.Model.DTOs;
-using ItmProject.Model.Models.Entities;
+﻿
+using DataTransfer.Business.Methods.Abstract;
+using DataTransfer.Business.Services.Abstract;
+using DataTransfer.Model.Entities;
 
 namespace DataTransfer.Business.Methods.Concrete
 {
     public class DepartmentMethod : IDepartmentMethod
     {
         private readonly IDepartmentService departmentService;
-        private readonly IFactoryService factoryService;
-        private readonly IMapper mapper;
 
-        public DepartmentMethod(IDepartmentService departmentService, IFactoryService factoryService, IMapper mapper)
+        public DepartmentMethod(IDepartmentService departmentService)
         {
             this.departmentService = departmentService;
-            this.factoryService = factoryService;
-            this.mapper = mapper;
         }
-        public List<DepartmentDTO>? Get()
+        public List<Department>? Get()
         {
             try
             {
                 var models = departmentService.GetAll().Where(m => m.IsDeleted == false).ToList();
-                var responseDtos = new List<DepartmentDTO>();
+                var responses = new List<Department>();
                 foreach (var model in models)
                 {
-                    var responseDto = mapper.Map<DepartmentDTO>(model);
-                    responseDtos.Add(responseDto);
+                    var response = mapper.Map<Department>(model);
+                    responses.Add(response);
                 }
 
-                return responseDtos;
+                return responses;
             }
             catch (Exception)
             {
@@ -39,34 +34,34 @@ namespace DataTransfer.Business.Methods.Concrete
             }
         }
 
-        public async Task<DepartmentDTO?> Get(int id)
+        public async Task<Department?> Get(int id)
         {
             var model = await departmentService.GetAsync(id);
             if (model != null)
             {
-                var responseDto = mapper.Map<DepartmentDTO>(model);
-                return responseDto;
+                var response = mapper.Map<Department>(model);
+                return response;
             }
 
             else
                 return null;
         }
 
-        public async Task<DepartmentDTO?> Post(DepartmentDTO model)
+        public async Task<Department?> Post(Department model)
         {
             DateTime utcNow = DateTime.UtcNow;
             var factory = factoryService.GetAll().FirstOrDefault();
             var utc = Convert.ToDouble(factory?.Country.UtcOffset ?? 3);
             DateTime now = utcNow.AddHours(utc);
 
-            var entity = mapper.Map<Department>(model); // DTO'yu Department'a dönüştür
+            var entity = mapper.Map<Department>(model); // 'yu Department'a dönüştür
             entity.CreatedBy = "apiUser";
             entity.CreatedDate = now;
             try
             {
                 await departmentService.AddAsync(entity);
-                var responseDto = mapper.Map<DepartmentDTO>(entity); // Department'ı DTO'ya dönüştür
-                return responseDto;
+                var response = mapper.Map<Department>(entity); // Department'ı 'ya dönüştür
+                return response;
             }
             catch (Exception)
             {
@@ -75,7 +70,7 @@ namespace DataTransfer.Business.Methods.Concrete
             }
         }
 
-        public async Task<DepartmentDTO?> Put(int id, DepartmentDTO model)
+        public async Task<Department?> Put(int id, Department model)
         {
             DateTime utcNow = DateTime.UtcNow;
             var factory = factoryService.GetAll().FirstOrDefault();
@@ -88,15 +83,15 @@ namespace DataTransfer.Business.Methods.Concrete
             {
                 return null;
             }
-            mapper.Map(model, entity); // DepartmentDTO nesnesini entity'ye dönüştür
+            mapper.Map(model, entity); // Department nesnesini entity'ye dönüştür
             entity.ModifiedBy = "apiUser";
             entity.ModifiedDate = now;
             try
             {
                 await departmentService.UpdateAsync(entity);
-                var responseDto = mapper.Map<DepartmentDTO>(entity); // Güncellenmiş entity'yi DepartmentDTO'ya dönüştür
+                var response = mapper.Map<Department>(entity); // Güncellenmiş entity'yi Department'ya dönüştür
 
-                return responseDto;
+                return response;
             }
             catch (Exception)
             {
@@ -105,7 +100,7 @@ namespace DataTransfer.Business.Methods.Concrete
             }
         }
 
-        public async Task<DepartmentDTO?> Delete(int id)
+        public async Task<Department?> Delete(int id)
         {
             var model = await departmentService.GetAsync(id);
             if (model != null)
@@ -113,8 +108,8 @@ namespace DataTransfer.Business.Methods.Concrete
                 try
                 {
                     await departmentService.RemoveAsync(model);
-                    var responseDto = mapper.Map<DepartmentDTO>(model);
-                    return responseDto;
+                    var response = mapper.Map<Department>(model);
+                    return response;
                 }
                 catch (Exception)
                 {

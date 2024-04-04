@@ -99,44 +99,7 @@ namespace DataTransfer.Api.ADO.NET
         }
         public static void DataTransfer(List<OperatorPerformance> model)
         {
-            var config = new ConfigurationBuilder()
-            .SetBasePath(Directory.GetCurrentDirectory())
-            .AddJsonFile("appsettings.json")
-            .Build();
-
-            string? sqlConnectionString = config.GetConnectionString("DomainConnectionString");
-            var models = new List<OperatorPerformance>();
-            using (var sqlConnection = new SqlConnection(sqlConnectionString))
-            {
-                try
-                {
-                    sqlConnection.Open();
-                    string cmdText = @$"SELECT FullName FROM Employees 
-                                        
-                        ";
-
-                    using (var sqlCommand = new SqlCommand(cmdText, sqlConnection))
-                    {
-                        SqlDataReader reader = sqlCommand.ExecuteReader();
-                        while (reader.Read())
-                        {
-                            var entity = new OperatorPerformance();
-                            entity.Employee_Name = reader[0]?.ToString() ?? "";
-                            entity.EmployeeId = reader.GetInt32(1);
-                            entity.Operation_Name = reader[2]?.ToString() ?? "";
-                            entity.Performance = reader.GetDecimal(3);
-                            entity.TimeMinute = reader.GetDecimal(4);
-
-                            models.Add(entity);
-                        }
-                        reader.Close();
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine("Bağlantı hatası: " + ex.Message);
-                }
-            }
+            
         }
     }
 }

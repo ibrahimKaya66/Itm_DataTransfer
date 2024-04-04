@@ -1,13 +1,14 @@
-﻿using ItmProject.Model.DTOs;
+﻿
+using DataTransfer.Model.Entities;
 
 namespace DataTransfer.Business.Methods.Abstract
 {
     public interface IOperationMethod
     {
-        List<OperationDTO>? Get();
-        Task<OperationDTO?> Get(int id);
-        Task<OperationDTO?> Post(OperationDTO model);
-        Task<OperationDTO?> Put(int id, OperationDTO model);
-        Task<OperationDTO?> Delete(int id);
+        List<Operation>? Get();
+        Task<Operation?> Get(int id);
+        Task<Operation?> Post(Operation model);
+        Task<Operation?> Put(int id, Operation model);
+        Task<Operation?> Delete(int id);
     }
 }
