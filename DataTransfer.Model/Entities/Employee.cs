@@ -4,6 +4,7 @@ namespace DataTransfer.Model.Entities
 {
     public class Employee
     {
+        public int Id { get; set; }
         [DisplayName("Ad Soyad")]
         public string FullName { get; set; }
         public bool IsWork { get; set; } = true;
@@ -12,5 +13,6 @@ namespace DataTransfer.Model.Entities
         public int JobId { get; set; }
         public int ExpenseTypeId { get; set; }//çalışan gider tipi
         public int? SourceId { get; set; }
+        public DateTime CreatedDate { get; set; }
     }
 }

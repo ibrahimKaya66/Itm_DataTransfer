@@ -1,4 +1,4 @@
-﻿namespace DataTransfer.Api.ADO.NET.Model
+﻿namespace DataTransfer.Model.Ado.Net
 {
     public class OperatorPerformance
     {

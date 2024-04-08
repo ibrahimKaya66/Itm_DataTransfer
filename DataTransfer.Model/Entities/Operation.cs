@@ -4,9 +4,9 @@ namespace DataTransfer.Model.Entities
 {
     public class Operation
     {
+        public int Id { get; set; }
         public string Name { get; set; }
         public int TypeId { get; set; }
-        public Type Type { get; set; }
         public int OperationGroupId { get; set; }
         public Group OperationGroup { get; set; }
         public int DepartmentId { get; set; }
@@ -21,5 +21,6 @@ namespace DataTransfer.Model.Entities
             get { return TimeSecond / 60 * (1 + Tolerance / 100); }
             set { /* set metodunu gerekirse implemente edebilirsiniz */ }
         }
+        public DateTime CreatedDate { get; set; }
     }
 }

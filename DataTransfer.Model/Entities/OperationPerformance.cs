@@ -4,6 +4,7 @@ namespace DataTransfer.Model.Entities
 {
     public class OperationPerformance
     {
+        public int Id { get; set; }
         [DisplayName("Tarih")]
         public DateTime Date_ { get; set; } = DateTime.Now;
         public int OperationId { get; set; }

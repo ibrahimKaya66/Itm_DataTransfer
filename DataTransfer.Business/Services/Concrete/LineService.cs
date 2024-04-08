@@ -1,8 +1,7 @@
-﻿using ItmProject.Business.Services.Abstract;
-using ItmProject.Dal.Context;
-using ItmProject.Dal.Repositories.Concrete;
-using ItmProject.Model.Models.Entities;
-using Microsoft.AspNetCore.Http;
+﻿using DataTransfer.Business.Services.Abstract;
+using DataTransfer.Dal.Context;
+using DataTransfer.Dal.Repositories.Concrete;
+using DataTransfer.Model.Entities;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
@@ -10,8 +9,8 @@ namespace DataTransfer.Business.Services.Concrete
 {
     public class LineService : RepositoryItm<Line>, ILineService
     {
-        private ItmDbContext _context;
-        public LineService(ItmDbContext context, IHttpContextAccessor httpContextAccessor) : base(context, httpContextAccessor)
+        private AppDbContext _context;
+        public LineService(AppDbContext context) : base(context)
         {
             _context = context;
         }
@@ -20,7 +19,6 @@ namespace DataTransfer.Business.Services.Concrete
             var models = base.GetAll();
             models = _context.Lines
                 .Include(m => m.Department)
-                    .ThenInclude(m => m.Factory)
                 .ToList();
 
             return models;
@@ -30,14 +28,16 @@ namespace DataTransfer.Business.Services.Concrete
             var model = await base.GetAsync(id);
             model = await _context.Lines
                 .Include(m => m.Department)
-                    .ThenInclude(m => m.Factory).SingleOrDefaultAsync(p => p.Id == id);
+                .SingleOrDefaultAsync(p => p.Id == id);
 
             return model;
         }
         public async Task<Line> GetAsync(Expression<Func<Line, bool>> filter)
         {
             var model = await base.GetAsync(filter);
-            model = await _context.Lines.Include(m => m.Department).ThenInclude(m => m.Factory).SingleOrDefaultAsync(filter);
+            model = await _context.Lines
+                .Include(m => m.Department)
+                .SingleOrDefaultAsync(filter);
 
             return model;
         }

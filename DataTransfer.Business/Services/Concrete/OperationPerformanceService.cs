@@ -1,8 +1,7 @@
-﻿using ItmProject.Business.Services.Abstract;
-using ItmProject.Dal.Context;
-using ItmProject.Dal.Repositories.Concrete;
-using ItmProject.Model.Models.Entities;
-using Microsoft.AspNetCore.Http;
+﻿using DataTransfer.Business.Services.Abstract;
+using DataTransfer.Dal.Context;
+using DataTransfer.Dal.Repositories.Concrete;
+using DataTransfer.Model.Entities;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
@@ -10,8 +9,8 @@ namespace DataTransfer.Business.Services.Concrete
 {
     public class OperationPerformanceService : RepositoryItm<OperationPerformance>, IOperationPerformanceService
     {
-        private ItmDbContext _context;
-        public OperationPerformanceService(ItmDbContext context, IHttpContextAccessor httpContextAccessor) : base(context, httpContextAccessor)
+        private AppDbContext _context;
+        public OperationPerformanceService(AppDbContext context) : base(context)
         {
             _context = context;
         }

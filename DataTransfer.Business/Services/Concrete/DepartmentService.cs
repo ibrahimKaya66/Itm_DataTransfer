@@ -1,49 +1,14 @@
-﻿using ItmProject.Business.Services.Abstract;
-using ItmProject.Dal.Context;
-using ItmProject.Dal.Repositories.Concrete;
-using ItmProject.Model.Models.Entities;
-using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
-using System.Linq.Expressions;
+﻿using DataTransfer.Business.Services.Abstract;
+using DataTransfer.Dal.Context;
+using DataTransfer.Dal.Repositories.Concrete;
+using DataTransfer.Model.Entities;
 
 namespace DataTransfer.Business.Services.Concrete
 {
     public class DepartmentService : RepositoryItm<Department>, IDepartmentService
     {
-        private ItmDbContext _context;
-        public DepartmentService(ItmDbContext context, IHttpContextAccessor httpContextAccessor) : base(context, httpContextAccessor)
+        public DepartmentService(AppDbContext context) : base(context)
         {
-            _context = context;
-        }
-        public List<Department> GetAll()
-        {
-            var models = base.GetAll();
-            models = _context.Departments
-                .Include(m => m.Factory)
-                  .ThenInclude(m => m.Country)
-                .ToList();
-
-            return models;
-        }
-        public async Task<Department> GetAsync(int id)
-        {
-            var model = await base.GetAsync(id);
-            model = await _context.Departments
-                 .Include(m => m.Factory)
-                  .ThenInclude(m => m.Country)
-                .SingleOrDefaultAsync(m => m.Id == id);
-
-            return model;
-        }
-        public async Task<Department> GetAsync(Expression<Func<Department, bool>> filter)
-        {
-            var model = await base.GetAsync(filter);
-            model = await _context.Departments
-                 .Include(m => m.Factory)
-                  .ThenInclude(m => m.Country)
-                .SingleOrDefaultAsync(filter);
-
-            return model;
         }
     }
 }

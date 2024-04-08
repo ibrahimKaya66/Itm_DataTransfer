@@ -1,5 +1,4 @@
-﻿using DataTransfer.Api.ADO.NET.Model;
-using System.Data;
+﻿using DataTransfer.Model.Ado.Net;
 using System.Data.SqlClient;
 
 namespace DataTransfer.Api.ADO.NET
@@ -96,10 +95,6 @@ namespace DataTransfer.Api.ADO.NET
             }
             return models;
 
-        }
-        public static void DataTransfer(List<OperatorPerformance> model)
-        {
-            
         }
     }
 }

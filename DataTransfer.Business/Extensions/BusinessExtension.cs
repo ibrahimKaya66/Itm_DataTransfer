@@ -21,13 +21,7 @@ namespace DataTransfer.Business.Extensions
             services.AddScoped<IOperationPerformanceService, OperationPerformanceService>();
 
             //Methods
-            services.AddScoped<IDepartmentMethod, DepartmentMethod>();
-            services.AddScoped<IEmployeeMethod, EmployeeMethod>();
-            services.AddScoped<IGroupMethod, GroupMethod>();
-            services.AddScoped<IGroupCodeMethod, GroupCodeMethod>();
-            services.AddScoped<ILineMethod, LineMethod>();            
-            services.AddScoped<IOperationMethod, OperationMethod>();
-            services.AddScoped<IOperationPerformanceMethod, OperationPerformanceMethod>();
+            services.AddScoped<IDataTransferMethod, DataTransferMethod>();
 
             var assembly = Assembly.GetExecutingAssembly();
 

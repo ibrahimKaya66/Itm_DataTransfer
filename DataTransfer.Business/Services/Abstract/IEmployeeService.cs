@@ -1,5 +1,5 @@
-﻿using ItmProject.Dal.Repositories.Abstract;
-using ItmProject.Model.Models.Entities;
+﻿using DataTransfer.Dal.Repositories.Abstract;
+using DataTransfer.Model.Entities;
 
 namespace DataTransfer.Business.Services.Abstract
 {
