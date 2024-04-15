@@ -106,7 +106,7 @@ namespace DataTransfer.Business.Methods.Concrete
                 }
 
                 //group add
-                group = await groupService.GetAsync(g => g.Name == item.Group_Name);
+                group = await groupService.GetAsync(g => g.Name.ToLower().Contains(item.Group_Name ?? "") == true);
                 if (group == null)
                 {
                     group = new Group()
@@ -139,14 +139,40 @@ namespace DataTransfer.Business.Methods.Concrete
                 operation = await operationService.GetAsync(o => o.Name == item.Operation_Name);
                 if (operation == null)
                 {
+                    int typeId = 0;
+                    if(item.Operation_Type?.ToLower() == "hand")
+                        typeId = 1;
+                    else if(item.Operation_Type?.ToLower() == "machine")
+                        typeId= 2;
+
                     operation = new Operation()
                     {
                         Name = item.Operation_Name,
-                        //...
+                        TypeId = typeId,
+                        OperationGroupId = group.Id,
+                        DepartmentId = department.Id,
+                        TimeSecond = item.TimeSecond,
                         CreatedDate = now
                     };
                     await operationService.AddAsync(operation);
                     operation = await operationService.GetAsync(o => o.Name == item.Operation_Name);//eklenenin Id bilgisini çek
+                }
+
+
+                //operationPerformance add
+                operationPerformance = await operationPerformanceService.GetAsync(op => op.OperationId == operation.Id && op.OperatorId == employee.Id && op.LineId == line.Id);
+                if (operationPerformance == null)
+                {
+                    operationPerformance = new OperationPerformance()
+                    {
+                        OperationId = operation.Id,
+                        OperatorId = employee.Id,
+                        LineId = line.Id,
+                        Performance = item.Performance,
+                        Date_ = now
+                    };
+                    await operationPerformanceService.AddAsync(operationPerformance);
+                    operationPerformance = await operationPerformanceService.GetAsync(op => op.OperationId == operation.Id && op.OperatorId == employee.Id && op.LineId == line.Id);//eklenenin Id bilgisini çek
                 }
             }
             
