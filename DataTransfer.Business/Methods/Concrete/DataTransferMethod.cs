@@ -132,7 +132,7 @@ namespace DataTransfer.Business.Methods.Concrete
                     int typeId = 0;
                     if(item.Operation_Type?.ToLower() == "hand")
                         typeId = 1;
-                    else if(item.Operation_Type?.ToLower() == "machine")
+                    else if(item.Operation_Type?.ToLower() == "mach")
                         typeId= 2;
 
                     operation = new Operation()
@@ -159,7 +159,8 @@ namespace DataTransfer.Business.Methods.Concrete
                         OperatorId = employee.Id,
                         LineId = line.Id,
                         Performance = item.Performance,
-                        Date_ = now
+                        Date_ = now,
+                        CreatedDate = now
                     };
                     await operationPerformanceService.AddAsync(operationPerformance);
                     operationPerformance = await operationPerformanceService.GetAsync(op => op.OperationId == operation.Id && op.OperatorId == employee.Id && op.LineId == line.Id);//eklenenin Id bilgisini çek

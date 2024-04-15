@@ -15,5 +15,6 @@ namespace DataTransfer.Model.Entities
         public decimal Performance { get; set; }
         public int LineId { get; set; }
         public Line Line { get; set; }
+        public DateTime CreatedDate { get; set; }
     }
 }
