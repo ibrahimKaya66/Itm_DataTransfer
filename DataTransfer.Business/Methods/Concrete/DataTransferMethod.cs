@@ -76,7 +76,7 @@ namespace DataTransfer.Business.Methods.Concrete
                 }
 
                 //Employee
-                employee = await employeeService.GetAsync(e => e.FullName.ToLower() == item.Employee_Name.ToLower());
+                employee = await employeeService.GetAsync(e => e.SourceId == item.EmployeeId);
                 if (employee == null)
                 {
                     employee = new Employee()
