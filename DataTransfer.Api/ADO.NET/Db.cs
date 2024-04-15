@@ -12,7 +12,7 @@ namespace DataTransfer.Api.ADO.NET
              .AddJsonFile("appsettings.json")
              .Build();
 
-            string? sqlConnectionString = config.GetConnectionString("DefaultConnection");
+            string? sqlConnectionString = config["AppSettings:DefaultConnection"];
             var models = new List<OperatorPerformance>();
             using (var sqlConnection = new SqlConnection(sqlConnectionString))
             {
@@ -86,7 +86,7 @@ namespace DataTransfer.Api.ADO.NET
                             model.Operation_Name = reader[3]?.ToString() ?? "";
                             model.TimeSecond = reader.GetDecimal(4);
                             model.Line_Name = reader[5]?.ToString() ?? "";
-                            model.LcdNo = reader.GetInt32(6);
+                            model.LcdNo = int.Parse(reader[6]?.ToString() ?? "");
                             model.TargetProductivity = reader.GetDecimal(7);
                             model.GroupCode_Name = reader[8]?.ToString() ?? "";
                             model.Group_Name = reader[9]?.ToString() ?? "";

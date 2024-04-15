@@ -49,7 +49,7 @@ namespace DataTransfer.Business.Methods.Concrete
             foreach (var item in model)
             {
                 //department add
-                department = await departmentService.GetAsync(d => d.Name == item.Department_Name);
+                department = await departmentService.GetAsync(d => d.Name.ToLower() == item.Department_Name.ToLower());
                 if(department == null)
                 {
                     department = new Department() 
@@ -63,7 +63,7 @@ namespace DataTransfer.Business.Methods.Concrete
                 }
 
                 //job add
-                job = await jobService.GetAsync(j => j.Name == item.Job_Name);
+                job = await jobService.GetAsync(j => j.Name.ToLower() == item.Job_Name.ToLower());
                 if (job == null)
                 {
                     job = new Job()
@@ -76,7 +76,7 @@ namespace DataTransfer.Business.Methods.Concrete
                 }
 
                 //Employee
-                employee = await employeeService.GetAsync(e => e.FullName == item.Employee_Name);
+                employee = await employeeService.GetAsync(e => e.FullName.ToLower() == item.Employee_Name.ToLower());
                 if (employee == null)
                 {
                     employee = new Employee()
@@ -93,7 +93,7 @@ namespace DataTransfer.Business.Methods.Concrete
                 }
 
                 //groupCode add
-                groupCode = await groupCodeService.GetAsync(g => g.Name == item.GroupCode_Name);
+                groupCode = await groupCodeService.GetAsync(g => g.Name.ToLower() == item.GroupCode_Name.ToLower());
                 if (groupCode == null)
                 {
                     groupCode = new GroupCode()
@@ -120,7 +120,7 @@ namespace DataTransfer.Business.Methods.Concrete
                 }
 
                 //line add
-                line = await lineService.GetAsync(l => l.Name == item.Line_Name);
+                line = await lineService.GetAsync(l => l.Name.ToLower() == item.Line_Name.ToLower());
                 if (line == null)
                 {
                     line = new Line()
@@ -136,7 +136,7 @@ namespace DataTransfer.Business.Methods.Concrete
                 }
 
                 //operation add
-                operation = await operationService.GetAsync(o => o.Name == item.Operation_Name);
+                operation = await operationService.GetAsync(o => o.Name.ToLower() == item.Operation_Name.ToLower());
                 if (operation == null)
                 {
                     int typeId = 0;
