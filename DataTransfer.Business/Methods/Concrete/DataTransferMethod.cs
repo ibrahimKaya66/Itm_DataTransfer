@@ -93,17 +93,7 @@ namespace DataTransfer.Business.Methods.Concrete
                 }
 
                 //groupCode add
-                groupCode = await groupCodeService.GetAsync(g => g.Name.ToLower() == item.GroupCode_Name.ToLower());
-                if (groupCode == null)
-                {
-                    groupCode = new GroupCode()
-                    {
-                        Name = item.GroupCode_Name,
-                        CreatedDate = now
-                    };
-                    await groupCodeService.AddAsync(groupCode);
-                    groupCode = await groupCodeService.GetAsync(g => g.Name == item.GroupCode_Name);//eklenenin Id bilgisini çek
-                }
+                groupCode = await groupCodeService.GetAsync(g => g.Name == "operasyon");
 
                 //group add
                 group = await groupService.GetAsync(g => g.Name.ToLower().Contains(item.Group_Name ?? "") == true);
