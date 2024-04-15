@@ -23,10 +23,13 @@ namespace DataTransfer.Dal.Context
 
             base.OnModelCreating(builder);
         }
+        public DbSet<Country> Countries { get; set; }
         public DbSet<Department> Departments { get; set; }
         public DbSet<Employee> Employees { get; set; }
+        public DbSet<Factory> Factories { get; set; }
         public DbSet<Group> Groups { get; set; }
         public DbSet<GroupCode> GroupCodes { get; set; }
+        public DbSet<Job> Jobs{ get; set; }
         public DbSet<Line> Lines { get; set; }
         public DbSet<Operation> Operations { get; set; }
         public DbSet<OperationPerformance> OperationPerformances { get; set; }

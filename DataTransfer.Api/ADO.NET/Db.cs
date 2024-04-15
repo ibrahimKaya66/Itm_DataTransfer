@@ -33,9 +33,12 @@ namespace DataTransfer.Api.ADO.NET
                                         SELECT 
                                         Employees.Employee_Name,
                                         Employee_DailyProduction.Employee_id,
+                                        Job_Title.Job_title,
                                         Balance_Model_Operation.Operation_Name,
                                         (Balance_Model_Operation.OperationToplamSTD*60) as OperationSec,
                                         Worker_Line.Line_Name,
+                                        Worker_Line.RaspberryKey,
+                                        Worker_Line.Target_Performance,
                                         Groups.Group_Type,
                                         Groups.Group_Name,
                                         Department.Depart_Name,
@@ -51,14 +54,18 @@ namespace DataTransfer.Api.ADO.NET
 				                                          Worker_Line with (nolock) on WokerLine_OrdersRouting.Line_Id = Worker_Line.Id INNER JOIN
 				                                          Groups on Balance_Model_Operation.Group_Id = Groups.Groups_id INNER JOIN
 				                                          Department ON Balance_Model_Operation.Department_Id = Department.Id  INNER JOIN
-				                                          Machine with (nolock) on Balance_Model_Operation.Machine_id = Machine.Machine_id
-                                        {conditions}
+				                                          Machine with (nolock) on Balance_Model_Operation.Machine_id = Machine.Machine_id INNER JOIN
+				                                          Job_Title with (nolock) on Employees.Job_title_id = Job_title.Job_id
+                                        {conditions} 
                                         GROUP BY  
                                         Employees.Employee_Name,
+                                        Job_Title.Job_title,
                                         Employee_DailyProduction.Employee_id,
                                         Balance_Model_Operation.Operation_Name,
                                         Balance_Model_Operation.OperationToplamSTD,
                                         Worker_Line.Line_Name,
+                                        Worker_Line.RaspberryKey,
+                                        Worker_Line.Target_Performance,
                                         Groups.Group_Type,
                                         Department.Depart_Name,
                                         Groups.Group_Name,
@@ -75,14 +82,17 @@ namespace DataTransfer.Api.ADO.NET
                             var model = new OperatorPerformance();
                             model.Employee_Name = reader[0]?.ToString() ?? "";
                             model.EmployeeId = reader.GetInt32(1);
-                            model.Operation_Name = reader[2]?.ToString() ?? "";
-                            model.TimeSecond = reader.GetDecimal(3);
-                            model.Line_Name = reader[4]?.ToString() ?? "";
-                            model.GroupCode_Name = reader[5]?.ToString() ?? "";
-                            model.Group_Name = reader[6]?.ToString() ?? "";
-                            model.Department_Name = reader[7]?.ToString() ?? "";
-                            model.Operation_Type = reader[8]?.ToString() ?? "";
-                            model.Performance = reader.GetDecimal(9);
+                            model.Job_Name = reader[2]?.ToString() ?? "";
+                            model.Operation_Name = reader[3]?.ToString() ?? "";
+                            model.TimeSecond = reader.GetDecimal(4);
+                            model.Line_Name = reader[5]?.ToString() ?? "";
+                            model.LcdNo = reader.GetInt32(6);
+                            model.TargetProductivity = reader.GetDecimal(7);
+                            model.GroupCode_Name = reader[8]?.ToString() ?? "";
+                            model.Group_Name = reader[9]?.ToString() ?? "";
+                            model.Department_Name = reader[10]?.ToString() ?? "";
+                            model.Operation_Type = reader[11]?.ToString() ?? "";
+                            model.Performance = reader.GetDecimal(12);
                             models.Add(model);
                         }
                         reader.Close();
