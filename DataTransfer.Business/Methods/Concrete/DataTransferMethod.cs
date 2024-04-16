@@ -38,7 +38,7 @@ namespace DataTransfer.Business.Methods.Concrete
             Group group = new Group();
             Job job = new Job();
             Line line = new Line();
-            OperationPerformance operationPerformance = new OperationPerformance();
+            OperationPerformance? operationPerformance = new OperationPerformance();
             Operation operation = new Operation();
 
             DateTime utcNow = DateTime.UtcNow;
@@ -148,9 +148,8 @@ namespace DataTransfer.Business.Methods.Concrete
                     operation = await operationService.GetAsync(o => o.Name == item.Operation_Name);//eklenenin Id bilgisini çek
                 }
 
-
                 //operationPerformance add
-                operationPerformance = await operationPerformanceService.GetAsync(op => op.OperationId == operation.Id && op.OperatorId == employee.Id && op.LineId == line.Id);
+                operationPerformance =  operationPerformanceService.GetAll().Where(op => op.OperationId == operation.Id && op.OperatorId == employee.Id && op.LineId == line.Id && op.Performance == item.Performance).FirstOrDefault();
                 if (operationPerformance == null)
                 {
                     operationPerformance = new OperationPerformance()
