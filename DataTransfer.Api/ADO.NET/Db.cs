@@ -106,5 +106,66 @@ namespace DataTransfer.Api.ADO.NET
             return models;
 
         }
+        public static List<StyleOperation> StyleOperations(string styleName)
+        {
+            var config = new ConfigurationBuilder()
+             .SetBasePath(Directory.GetCurrentDirectory())
+             .AddJsonFile("appsettings.json")
+             .Build();
+
+            string? sqlConnectionString = config["AppSettings:DefaultConnection"];
+            var models = new List<StyleOperation>();
+            using (var sqlConnection = new SqlConnection(sqlConnectionString))
+            {
+                try
+                {
+                    sqlConnection.Open();
+                    string conditions = string.Empty;
+
+                    conditions = $" WHERE Model.Model_Name = '{styleName}' ";
+
+                    string cmdText = @$"
+                                        select 
+                                        Operation.Oper_Sequence
+                                        Model_Name,
+                                        Model_Code,
+                                        Groups.Group_Name,
+                                        Operation.Operation_Name,
+                                        (Operation.OperationToplamSTD*60) as TimeSec,
+                                        Customers.Customer_Name,
+                                        from Operation
+                                        inner join Model with (nolock) on Operation.Model_id = Model.Id
+                                        inner join Groups with (nolock) on Model.Group_Id = Groups.Groups_id
+                                        inner join Customers with (nolock) on Model.Customer_id = Customers.Customer_id
+                                        {conditions}
+                                        order by 
+                                        Operation.Oper_Sequence
+                        ";
+
+                    using (var sqlCommand = new SqlCommand(cmdText, sqlConnection))
+                    {
+                        SqlDataReader reader = sqlCommand.ExecuteReader();
+                        while (reader.Read())
+                        {
+                            var model = new StyleOperation();
+                            model.EntityOrder = reader.GetInt32(0);
+                            model.StyleName = reader[1]?.ToString() ?? "";
+                            model.StyleCode = reader[2]?.ToString() ?? "";
+                            model.OperationName = reader[3]?.ToString() ?? "";
+                            model.TimeSecond = reader.GetDecimal(4);
+                            model.CustomerName = reader[5]?.ToString() ?? "";
+                            models.Add(model);
+                        }
+                        reader.Close();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Bağlantı hatası: " + ex.Message);
+                }
+            }
+            return models;
+
+        }
     }
 }

@@ -12,6 +12,7 @@ namespace DataTransfer.Business.Extensions
         public static IServiceCollection LoadBusinessLayerExtension(this IServiceCollection services)
         {
             //Services
+            services.AddScoped<ICustomerService, CustomerService>();
             services.AddScoped<IDepartmentService, DepartmentService>();
             services.AddScoped<IEmployeeService, EmployeeService>();
             services.AddScoped<IFactoryService, FactoryService>();
@@ -21,6 +22,7 @@ namespace DataTransfer.Business.Extensions
             services.AddScoped<ILineService, LineService>();
             services.AddScoped<IOperationService, OperationService>();
             services.AddScoped<IOperationPerformanceService, OperationPerformanceService>();
+            services.AddScoped<IStyleService, StyleService>();
 
             //Methods
             services.AddScoped<IDataTransferMethod, DataTransferMethod>();

@@ -26,5 +26,12 @@ namespace DataTransfer.Api.Controllers
             await dataTransferMethod.DataTransfer(entities);
             return entities == null ? BadRequest() : Ok(entities);
         }
+        [HttpGet]
+        public async Task<IActionResult> GetStyleOperations(string styleName)
+        {
+            var entities = Db.StyleOperations(styleName);
+            await dataTransferMethod.StyleOperations(entities);
+            return entities == null ? BadRequest() : Ok(entities);
+        }
     }
 }

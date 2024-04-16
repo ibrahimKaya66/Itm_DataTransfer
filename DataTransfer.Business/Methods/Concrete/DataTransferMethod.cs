@@ -167,5 +167,9 @@ namespace DataTransfer.Business.Methods.Concrete
             }
             
         }
+        public async Task StyleOperations(List<StyleOperation> models)
+        {
+
+        }
     }
 }
