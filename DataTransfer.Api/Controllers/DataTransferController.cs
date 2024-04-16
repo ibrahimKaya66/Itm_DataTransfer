@@ -30,7 +30,7 @@ namespace DataTransfer.Api.Controllers
         public async Task<IActionResult> GetStyleOperations(string styleName)
         {
             var entities = Db.StyleOperations(styleName);
-            await dataTransferMethod.StyleOperations(entities);
+            await dataTransferMethod.StyleOperations(styleName,entities);
             return entities == null ? BadRequest() : Ok(entities);
         }
     }

@@ -7,6 +7,7 @@ namespace DataTransfer.Business.Methods.Concrete
 {
     public class DataTransferMethod : IDataTransferMethod
     {
+        private readonly ICustomerService customerService;
         private readonly IDepartmentService departmentService;
         private readonly IEmployeeService employeeService;
         private readonly IFactoryService factoryService;
@@ -16,9 +17,11 @@ namespace DataTransfer.Business.Methods.Concrete
         private readonly ILineService lineService;
         private readonly IOperationPerformanceService operationPerformanceService;
         private readonly IOperationService operationService;
+        private readonly IStyleService styleService;
 
-        public DataTransferMethod(IDepartmentService departmentService, IEmployeeService employeeService, IFactoryService factoryService, IGroupCodeService groupCodeService, IGroupService groupService, IJobService jobService, ILineService lineService, IOperationPerformanceService operationPerformanceService, IOperationService operationService)
+        public DataTransferMethod(ICustomerService customerService, IDepartmentService departmentService, IEmployeeService employeeService, IFactoryService factoryService, IGroupCodeService groupCodeService, IGroupService groupService, IJobService jobService, ILineService lineService, IOperationPerformanceService operationPerformanceService, IOperationService operationService, IStyleService styleService)
         {
+            this.customerService = customerService;
             this.departmentService = departmentService;
             this.employeeService = employeeService;
             this.factoryService = factoryService;
@@ -28,6 +31,7 @@ namespace DataTransfer.Business.Methods.Concrete
             this.lineService = lineService;
             this.operationPerformanceService = operationPerformanceService;
             this.operationService = operationService;
+            this.styleService = styleService;
         }
 
         public async Task DataTransfer(List<OperatorPerformance> model)
@@ -167,9 +171,24 @@ namespace DataTransfer.Business.Methods.Concrete
             }
             
         }
-        public async Task StyleOperations(List<StyleOperation> models)
+        public async Task StyleOperations(string styleName, List<StyleOperation> models)
         {
+            DateTime utcNow = DateTime.UtcNow;
+            var factory = factoryService.GetAll().FirstOrDefault();
+            var utc = Convert.ToDouble(factory?.Country.UtcOffset ?? 3);
+            DateTime now = utcNow.AddHours(utc);
 
+            Style style = new Style();
+            //department add
+            style = await styleService.GetAsync(d => d.Name.ToLower() == styleName.ToLower());
+            if (style == null)
+            {
+                style = new Style()
+                {
+                };
+                await styleService.AddAsync(style);
+                style = await styleService.GetAsync(d => d.Name.ToLower() == styleName.ToLower());//eklenenin Id bilgisini çek
+            }
         }
     }
 }
