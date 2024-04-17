@@ -19,14 +19,14 @@ namespace DataTransfer.Api.Controllers
             this.dataTransferMethod = dataTransferMethod;
         }
 
-        [HttpGet]
+        [HttpGet("OperatorPerformance")]
         public async Task<IActionResult> GetOperatorPerformances(string? startDate = null, string? endDate = null)
         {
             var entities = Db.OperatorPerformances(startDate, endDate);
             await dataTransferMethod.DataTransfer(entities);
             return entities == null ? BadRequest() : Ok(entities);
         }
-        [HttpGet]
+        [HttpGet("StyleOperation")]
         public async Task<IActionResult> GetStyleOperations(string styleName)
         {
             var entities = Db.StyleOperations(styleName);
