@@ -182,6 +182,8 @@ namespace DataTransfer.Business.Methods.Concrete
 
             Style style = new Style();
             Customer customer = new Customer();
+            Department department = new Department();
+            Group group = new Group();
             //department add
             var item = models.FirstOrDefault();
             style = await styleService.GetAsync(s => s.Name.ToLower() == styleName.ToLower() && s.ReferanceNo.ToLower() == item.StyleCode.ToLower());
@@ -215,7 +217,53 @@ namespace DataTransfer.Business.Methods.Concrete
             }
             foreach (var model in models)
             {
+                department = await departmentService.GetAsync(d => d.Name.ToLower() == item.DepartmentName.ToLower());
+                if (department == null)
+                {
+                    department = new Department()
+                    {
+                        Name = item.DepartmentName,
+                        FactoryId = factory?.Id ?? 1,
+                        CreatedDate = now
+                    };
+                    await departmentService.AddAsync(department);
+                    department = await departmentService.GetAsync(d => d.Name == item.DepartmentName);//eklenenin Id bilgisini çek
+                }
+
+                group = await groupService.GetAsync(d => d.Name.ToLower() == item.OperationGroupName.ToLower());
+                if (group == null)
+                {
+                    group = new Group()
+                    {
+                        Name = item.OperationGroupName,
+                        GroupCodeId = 4,//catalog group
+                        CreatedDate = now
+                    };
+                    await groupService.AddAsync(group);
+                    group = await groupService.GetAsync(d => d.Name.ToLower() == item.OperationGroupName.ToLower());//eklenenin Id bilgisini çek
+                }
+
                 var operation = await operationService.GetAsync(o => o.Name.ToLower() == model.OperationName && o.TimeSecond == model.TimeSecond);
+                if (operation == null)
+                {
+                    int typeId = 0;
+                    if (item.OperationType?.ToLower() == "hand")
+                        typeId = 1;
+                    else if (item.OperationType?.ToLower() == "mach")
+                        typeId = 2;
+
+                    operation = new Operation()
+                    {
+                        Name = model.OperationName,
+                        TypeId = typeId,
+                        OperationGroupId = group.Id,
+                        DepartmentId = department.Id,
+                        TimeSecond = model.TimeSecond,
+                        CreatedDate = now
+                    };
+                    await operationService.AddAsync(operation);
+                    operation = await operationService.GetAsync(o => o.Name.ToLower() == model.OperationName && o.TimeSecond == model.TimeSecond);
+                }
                 var style_Operation = await style_OperationService.GetAsync(so => so.StyleId == style.Id && so.OperationId == operation.Id && so.EntityOrder == model.EntityOrder);
                 if (style_Operation == null) 
                 {

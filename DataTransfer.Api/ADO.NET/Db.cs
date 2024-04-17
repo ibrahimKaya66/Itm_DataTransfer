@@ -129,15 +129,21 @@ namespace DataTransfer.Api.ADO.NET
                                         Operation.Oper_Sequence
                                         Model_Name,
                                         Model_Code,
-                                        Groups.Group_Name,
+                                        Groups.Group_Name as KatalogGroup,
                                         Operation.Operation_Name,
                                         (Operation.OperationToplamSTD*60) as TimeSec,
-                                        Customers.Customer_Name
+                                        Customers.Customer_Name,
+                                        Machine.Machine_Type as OperationType ,
+                                        Department.Depart_Name,
+                                        OperationGroups.Group_Name as OperationGroupName
                                         from Operation
                                         inner join Model with (nolock) on Operation.Model_id = Model.Id
                                         inner join Groups with (nolock) on Model.Group_Id = Groups.Groups_id
                                         inner join Customers with (nolock) on Model.Customer_id = Customers.Customer_id
-                                        {conditions}
+                                        inner join Machine with (nolock) on Operation.Machine_id = Machine.Machine_id
+                                        inner join Department with(nolock) on Operation.Department_Id = Department.Id
+                                        inner join Groups as OperationGroups with(nolock) on Operation.Operation_Groups = OperationGroups.Groups_id
+                                        where Model_Name = @Model_NAme
                                         order by 
                                         Operation.Oper_Sequence
                         ";
@@ -151,9 +157,13 @@ namespace DataTransfer.Api.ADO.NET
                             model.EntityOrder = reader.GetInt32(0);
                             model.StyleName = reader[1]?.ToString() ?? "";
                             model.StyleCode = reader[2]?.ToString() ?? "";
-                            model.OperationName = reader[3]?.ToString() ?? "";
-                            model.TimeSecond = reader.GetDecimal(4);
-                            model.CustomerName = reader[5]?.ToString() ?? "";
+                            model.CatalogGroupName = reader[3]?.ToString() ?? "";
+                            model.OperationName = reader[4]?.ToString() ?? "";
+                            model.TimeSecond = reader.GetDecimal(5);
+                            model.CustomerName = reader[6]?.ToString() ?? "";
+                            model.OperationType = reader[7]?.ToString() ?? "";
+                            model.DepartmentName = reader[8]?.ToString() ?? "";
+                            model.OperationGroupName = reader[9]?.ToString() ?? "";
                             models.Add(model);
                         }
                         reader.Close();
