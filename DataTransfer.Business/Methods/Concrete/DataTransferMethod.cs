@@ -102,7 +102,7 @@ namespace DataTransfer.Business.Methods.Concrete
                 groupCode = await groupCodeService.GetAsync(g => g.Name == "operasyon");
 
                 //group add
-                group = await groupService.GetAsync(g => g.Name.ToLower().Contains(item.Group_Name ?? "") == true);
+                group = await groupService.GetAsync(g => g.Name == item.Group_Name);
                 if (group == null)
                 {
                     group = new Group()
@@ -189,7 +189,7 @@ namespace DataTransfer.Business.Methods.Concrete
             style = await styleService.GetAsync(s => s.Name.ToLower() == styleName.ToLower() && s.ReferanceNo.ToLower() == item.StyleCode.ToLower());
             if (style == null)
             {
-                customer = await customerService.GetAsync(c=>c.Name.ToLower() == item.CustomerName.ToLower());
+                customer = await customerService.GetAsync(c=>c.Name == item.CustomerName);
                 if(customer == null)
                 {
                     customer = new Customer()
@@ -199,7 +199,7 @@ namespace DataTransfer.Business.Methods.Concrete
                         CreatedDate = now
                     };
                     await customerService.AddAsync(customer);
-                    customer = await customerService.GetAsync(c => c.Name.ToLower() == item.CustomerName.ToLower());
+                    customer = await customerService.GetAsync(c => c.Name == item.CustomerName);
                 }
                 style = new Style()
                 {
@@ -230,7 +230,7 @@ namespace DataTransfer.Business.Methods.Concrete
                     department = await departmentService.GetAsync(d => d.Name == item.DepartmentName);//eklenenin Id bilgisini çek
                 }
 
-                group = await groupService.GetAsync(d => d.Name.ToLower() == item.OperationGroupName.ToLower());
+                group = await groupService.GetAsync(g => g.Name == item.OperationGroupName);
                 if (group == null)
                 {
                     group = new Group()
