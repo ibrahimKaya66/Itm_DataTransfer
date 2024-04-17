@@ -186,7 +186,7 @@ namespace DataTransfer.Business.Methods.Concrete
             Group group = new Group();
             //department add
             var item = models.FirstOrDefault();
-            style = await styleService.GetAsync(s => s.Name.ToLower() == styleName.ToLower() && s.ReferanceNo.ToLower() == item.StyleCode.ToLower());
+            style = await styleService.GetAsync(s => s.Name == styleName && s.ReferanceNo == item.StyleCode);
             if (style == null)
             {
                 customer = await customerService.GetAsync(c=>c.Name == item.CustomerName);
