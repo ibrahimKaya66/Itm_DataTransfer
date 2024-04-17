@@ -143,7 +143,7 @@ namespace DataTransfer.Api.ADO.NET
                                         inner join Machine with (nolock) on Operation.Machine_id = Machine.Machine_id
                                         inner join Department with(nolock) on Operation.Department_Id = Department.Id
                                         inner join Groups as OperationGroups with(nolock) on Operation.Operation_Groups = OperationGroups.Groups_id
-                                        where Model_Name = @Model_NAme
+                                        {conditions}
                                         order by 
                                         Operation.Oper_Sequence
                         ";
