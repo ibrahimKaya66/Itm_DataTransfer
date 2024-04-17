@@ -36,7 +36,7 @@ namespace DataTransfer.Business.Methods.Concrete
             this.style_OperationService = style_OperationService;
         }
 
-        public async Task DataTransfer(List<OperatorPerformance> model)
+        public async Task DataTransfer(List<OperatorPerformance> models)
         {
             Department department = new Department();
             Employee employee = new Employee();
@@ -52,7 +52,7 @@ namespace DataTransfer.Business.Methods.Concrete
             var utc = Convert.ToDouble(factory?.Country.UtcOffset ?? 3);
             DateTime now = utcNow.AddHours(utc);
 
-            foreach (var item in model)
+            foreach (var item in models)
             {
                 //department add
                 department = await departmentService.GetAsync(d => d.Name.ToLower() == item.Department_Name.ToLower());
@@ -69,7 +69,7 @@ namespace DataTransfer.Business.Methods.Concrete
                 }
 
                 //job add
-                job = await jobService.GetAsync(j => j.Name.ToLower() == item.Job_Name.ToLower());
+                job = await jobService.GetAsync(j => j.Name == item.Job_Name);
                 if (job == null)
                 {
                     job = new Job()
@@ -116,7 +116,7 @@ namespace DataTransfer.Business.Methods.Concrete
                 }
 
                 //line add
-                line = await lineService.GetAsync(l => l.Name.ToLower() == item.Line_Name.ToLower());
+                line = await lineService.GetAsync(l => l.Name == item.Line_Name);
                 if (line == null)
                 {
                     line = new Line()
@@ -132,7 +132,7 @@ namespace DataTransfer.Business.Methods.Concrete
                 }
 
                 //operation add
-                operation = await operationService.GetAsync(o => o.Name.ToLower() == item.Operation_Name.ToLower());
+                operation = await operationService.GetAsync(o => o.Name == item.Operation_Name);
                 if (operation == null)
                 {
                     int typeId = 0;
@@ -235,7 +235,7 @@ namespace DataTransfer.Business.Methods.Concrete
                 {
                     department = new Department()
                     {
-                        Name = item.DepartmentName,
+                        Name = model.DepartmentName,
                         FactoryId = factory?.Id ?? 1,
                         CreatedDate = now
                     };
@@ -248,7 +248,7 @@ namespace DataTransfer.Business.Methods.Concrete
                 {
                     group = new Group()
                     {
-                        Name = item.OperationGroupName,
+                        Name = model.OperationGroupName,
                         GroupCodeId = 1,//catalog group
                         CreatedDate = now
                     };
