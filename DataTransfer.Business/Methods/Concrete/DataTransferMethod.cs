@@ -201,6 +201,19 @@ namespace DataTransfer.Business.Methods.Concrete
                     await customerService.AddAsync(customer);
                     customer = await customerService.GetAsync(c => c.Name == item.CustomerName);
                 }
+                group = await groupService.GetAsync(d => d.Name == item.CatalogGroupName);
+                if (group == null)
+                {
+                    group = new Group()
+                    {
+                        Name = item.CatalogGroupName,
+                        GroupCodeId = 4,//catalog group
+                        CreatedDate = now
+                    };
+                    await groupService.AddAsync(group);
+                    group = await groupService.GetAsync(d => d.Name == item.CatalogGroupName);//eklenenin Id bilgisini çek
+                }
+
                 style = new Style()
                 {
                     Name = styleName,
@@ -208,12 +221,12 @@ namespace DataTransfer.Business.Methods.Concrete
                     CustomerId = customer.Id,
                     StyleGroupId = 8,//bay
                     SeasonGroupId = 14,//yaz
-                    CatalogGroupId = 11,//t-shirt
+                    CatalogGroupId = group.Id,//t-shirt
                     SetGroupId = 16,//alt-üst
                     CreatedDate = now
                 };
                 await styleService.AddAsync(style);
-                style = await styleService.GetAsync(s => s.Name.ToLower() == styleName.ToLower() && s.ReferanceNo.ToLower() == item.StyleCode.ToLower());//eklenenin Id bilgisini çek
+                style = await styleService.GetAsync(s => s.Name == styleName && s.ReferanceNo == item.StyleCode);//eklenenin Id bilgisini çek
             }
             foreach (var model in models)
             {
@@ -236,7 +249,7 @@ namespace DataTransfer.Business.Methods.Concrete
                     group = new Group()
                     {
                         Name = item.OperationGroupName,
-                        GroupCodeId = 4,//catalog group
+                        GroupCodeId = 1,//catalog group
                         CreatedDate = now
                     };
                     await groupService.AddAsync(group);
