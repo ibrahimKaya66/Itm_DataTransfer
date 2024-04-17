@@ -13,6 +13,7 @@ namespace DataTransfer.Model.Entities
         public int LCDNo { get; set; }
         public int DepartmentId { get; set; }
         public Department Department { get; set; }
+        public bool? IsDeleted { get; set; } = false;
         public DateTime CreatedDate { get; set; }
     }
 }

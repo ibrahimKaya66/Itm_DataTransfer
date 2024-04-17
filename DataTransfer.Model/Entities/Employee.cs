@@ -13,6 +13,7 @@ namespace DataTransfer.Model.Entities
         public int JobId { get; set; }
         public int ExpenseTypeId { get; set; }//çalışan gider tipi
         public int? SourceId { get; set; }
+        public bool? IsDeleted { get; set; } = false;
         public DateTime CreatedDate { get; set; }
     }
 }

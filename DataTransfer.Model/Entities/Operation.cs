@@ -21,6 +21,7 @@ namespace DataTransfer.Model.Entities
             get { return TimeSecond / 60 * (1 + Tolerance / 100); }
             set { /* set metodunu gerekirse implemente edebilirsiniz */ }
         }
+        public bool? IsDeleted { get; set; } = false;
         public DateTime CreatedDate { get; set; }
     }
 }

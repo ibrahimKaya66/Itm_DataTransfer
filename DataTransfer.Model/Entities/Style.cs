@@ -16,6 +16,7 @@
         public int SetGroupId { get; set; }
         public Group SetGroup { get; set; }
         public bool IsArchived { get; set; } = false;
+        public bool? IsDeleted { get; set; } = false;
         public DateTime CreatedDate { get; set; }
     }
 }

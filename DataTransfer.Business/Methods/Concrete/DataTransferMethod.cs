@@ -189,7 +189,7 @@ namespace DataTransfer.Business.Methods.Concrete
             style = await styleService.GetAsync(s => s.Name.ToLower() == styleName.ToLower() && s.ReferanceNo.ToLower() == item.StyleCode.ToLower());
             if (style == null)
             {
-                customer = await customerService.GetAsync(c=>c.Name .ToLower() == item.CustomerName.ToLower());
+                customer = await customerService.GetAsync(c=>c.Name.ToLower() == item.CustomerName.ToLower());
                 if(customer == null)
                 {
                     customer = new Customer()
@@ -213,7 +213,7 @@ namespace DataTransfer.Business.Methods.Concrete
                     CreatedDate = now
                 };
                 await styleService.AddAsync(style);
-                style = await styleService.GetAsync(d => d.Name.ToLower() == styleName.ToLower());//eklenenin Id bilgisini çek
+                style = await styleService.GetAsync(s => s.Name.ToLower() == styleName.ToLower() && s.ReferanceNo.ToLower() == item.StyleCode.ToLower());//eklenenin Id bilgisini çek
             }
             foreach (var model in models)
             {

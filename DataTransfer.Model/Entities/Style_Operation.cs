@@ -11,6 +11,7 @@ namespace DataTransfer.Model.Entities
         public Operation Operation { get; set; }
         [DisplayName("İş Ögesi")]
         public int? EntityOrder { get; set; }
+        public bool? IsDeleted { get; set; } = false;
         public DateTime CreatedDate { get; set; }
     }
 }

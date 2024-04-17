@@ -126,7 +126,7 @@ namespace DataTransfer.Api.ADO.NET
 
                     string cmdText = @$"
                                         select 
-                                        Operation.Oper_Sequence
+                                        Operation.Oper_Sequence,
                                         Model_Name,
                                         Model_Code,
                                         Groups.Group_Name as KatalogGroup,

@@ -16,10 +16,10 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
 
-string dafaultConnectionString = builder.Configuration["AppSettings:DomainConnectionString"];
+string defaultConnectionString = builder.Configuration["AppSettings:DomainConnectionString"];
 
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(dafaultConnectionString));
+    options.UseSqlServer(defaultConnectionString));
 
 var app = builder.Build();
 
