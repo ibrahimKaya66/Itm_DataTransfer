@@ -182,10 +182,10 @@ namespace DataTransfer.Business.Methods.Concrete
 
             Style style = new Style();
             //department add
-            style = await styleService.GetAsync(d => d.Name.ToLower() == styleName.ToLower());
+            var item = models.FirstOrDefault();
+            style = await styleService.GetAsync(s => s.Name.ToLower() == styleName.ToLower() && s.ReferanceNo.ToLower() == item.StyleCode.ToLower());
             if (style == null)
             {
-                var item = models.FirstOrDefault();
                 var customer = await customerService.GetAsync(c=>c.Name .ToLower() == item.CustomerName.ToLower());
                 style = new Style()
                 {
@@ -203,7 +203,7 @@ namespace DataTransfer.Business.Methods.Concrete
             }
             foreach (var model in models)
             {
-                var operation = await operationService.GetAsync(o => o.Name.ToLower() == model.OperationName);
+                var operation = await operationService.GetAsync(o => o.Name.ToLower() == model.OperationName && o.TimeSecond == model.TimeSecond);
                 var style_Operation = await style_OperationService.GetAsync(so => so.StyleId == style.Id && so.OperationId == operation.Id && so.EntityOrder == model.EntityOrder);
                 if (style_Operation == null) 
                 {
