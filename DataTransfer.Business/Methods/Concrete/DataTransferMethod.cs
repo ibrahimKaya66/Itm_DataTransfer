@@ -181,12 +181,24 @@ namespace DataTransfer.Business.Methods.Concrete
             DateTime now = utcNow.AddHours(utc);
 
             Style style = new Style();
+            Customer customer = new Customer();
             //department add
             var item = models.FirstOrDefault();
             style = await styleService.GetAsync(s => s.Name.ToLower() == styleName.ToLower() && s.ReferanceNo.ToLower() == item.StyleCode.ToLower());
             if (style == null)
             {
-                var customer = await customerService.GetAsync(c=>c.Name .ToLower() == item.CustomerName.ToLower());
+                customer = await customerService.GetAsync(c=>c.Name .ToLower() == item.CustomerName.ToLower());
+                if(customer == null)
+                {
+                    customer = new Customer()
+                    {
+                        Name = item.CustomerName,
+                        CountryId = 1,
+                        CreatedDate = now
+                    };
+                    await customerService.AddAsync(customer);
+                    customer = await customerService.GetAsync(c => c.Name.ToLower() == item.CustomerName.ToLower());
+                }
                 style = new Style()
                 {
                     Name = styleName,

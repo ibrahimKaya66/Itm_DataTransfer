@@ -132,7 +132,7 @@ namespace DataTransfer.Api.ADO.NET
                                         Groups.Group_Name,
                                         Operation.Operation_Name,
                                         (Operation.OperationToplamSTD*60) as TimeSec,
-                                        Customers.Customer_Name,
+                                        Customers.Customer_Name
                                         from Operation
                                         inner join Model with (nolock) on Operation.Model_id = Model.Id
                                         inner join Groups with (nolock) on Model.Group_Id = Groups.Groups_id
