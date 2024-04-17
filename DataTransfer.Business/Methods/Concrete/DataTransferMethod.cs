@@ -230,7 +230,7 @@ namespace DataTransfer.Business.Methods.Concrete
             }
             foreach (var model in models)
             {
-                department = await departmentService.GetAsync(d => d.Name.ToLower() == item.DepartmentName.ToLower());
+                department = await departmentService.GetAsync(d => d.Name.ToLower() == model.DepartmentName.ToLower());
                 if (department == null)
                 {
                     department = new Department()
@@ -240,10 +240,10 @@ namespace DataTransfer.Business.Methods.Concrete
                         CreatedDate = now
                     };
                     await departmentService.AddAsync(department);
-                    department = await departmentService.GetAsync(d => d.Name == item.DepartmentName);//eklenenin Id bilgisini çek
+                    department = await departmentService.GetAsync(d => d.Name == model.DepartmentName);//eklenenin Id bilgisini çek
                 }
 
-                group = await groupService.GetAsync(g => g.Name == item.OperationGroupName);
+                group = await groupService.GetAsync(g => g.Name == model.OperationGroupName);
                 if (group == null)
                 {
                     group = new Group()
@@ -253,7 +253,7 @@ namespace DataTransfer.Business.Methods.Concrete
                         CreatedDate = now
                     };
                     await groupService.AddAsync(group);
-                    group = await groupService.GetAsync(d => d.Name.ToLower() == item.OperationGroupName.ToLower());//eklenenin Id bilgisini çek
+                    group = await groupService.GetAsync(g => g.Name == model.OperationGroupName);//eklenenin Id bilgisini çek
                 }
 
                 var operation = await operationService.GetAsync(o => o.Name.ToLower() == model.OperationName && o.TimeSecond == model.TimeSecond);
