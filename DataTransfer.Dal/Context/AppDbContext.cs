@@ -35,5 +35,6 @@ namespace DataTransfer.Dal.Context
         public DbSet<Operation> Operations { get; set; }
         public DbSet<OperationPerformance> OperationPerformances { get; set; }
         public DbSet<Style> Styles { get; set; }
+        public DbSet<Style_Operation> Style_Operations { get; set; }
     }
 }

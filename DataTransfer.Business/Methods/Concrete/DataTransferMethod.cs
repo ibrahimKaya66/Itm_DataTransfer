@@ -18,8 +18,9 @@ namespace DataTransfer.Business.Methods.Concrete
         private readonly IOperationPerformanceService operationPerformanceService;
         private readonly IOperationService operationService;
         private readonly IStyleService styleService;
+        private readonly IStyle_OperationService style_OperationService;
 
-        public DataTransferMethod(ICustomerService customerService, IDepartmentService departmentService, IEmployeeService employeeService, IFactoryService factoryService, IGroupCodeService groupCodeService, IGroupService groupService, IJobService jobService, ILineService lineService, IOperationPerformanceService operationPerformanceService, IOperationService operationService, IStyleService styleService)
+        public DataTransferMethod(ICustomerService customerService, IDepartmentService departmentService, IEmployeeService employeeService, IFactoryService factoryService, IGroupCodeService groupCodeService, IGroupService groupService, IJobService jobService, ILineService lineService, IOperationPerformanceService operationPerformanceService, IOperationService operationService, IStyleService styleService, IStyle_OperationService style_OperationService)
         {
             this.customerService = customerService;
             this.departmentService = departmentService;
@@ -32,6 +33,7 @@ namespace DataTransfer.Business.Methods.Concrete
             this.operationPerformanceService = operationPerformanceService;
             this.operationService = operationService;
             this.styleService = styleService;
+            this.style_OperationService = style_OperationService;
         }
 
         public async Task DataTransfer(List<OperatorPerformance> model)
@@ -183,11 +185,37 @@ namespace DataTransfer.Business.Methods.Concrete
             style = await styleService.GetAsync(d => d.Name.ToLower() == styleName.ToLower());
             if (style == null)
             {
+                var item = models.FirstOrDefault();
+                var customer = await customerService.GetAsync(c=>c.Name .ToLower() == item.CustomerName.ToLower());
                 style = new Style()
                 {
+                    Name = styleName,
+                    ReferanceNo = item?.StyleCode,
+                    CustomerId = customer.Id,
+                    StyleGroupId = 8,//bay
+                    SeasonGroupId = 14,//yaz
+                    CatalogGroupId = 11,//t-shirt
+                    SetGroupId = 16,//alt-üst
+                    CreatedDate = now
                 };
                 await styleService.AddAsync(style);
                 style = await styleService.GetAsync(d => d.Name.ToLower() == styleName.ToLower());//eklenenin Id bilgisini çek
+            }
+            foreach (var model in models)
+            {
+                var operation = await operationService.GetAsync(o => o.Name.ToLower() == model.OperationName);
+                var style_Operation = await style_OperationService.GetAsync(so => so.StyleId == style.Id && so.OperationId == operation.Id && so.EntityOrder == model.EntityOrder);
+                if (style_Operation == null) 
+                {
+                    style_Operation = new Style_Operation()
+                    {
+                        StyleId = style.Id,
+                        OperationId = operation.Id,
+                        EntityOrder = model.EntityOrder,
+                        CreatedDate = now
+                    };
+                    await style_OperationService.AddAsync(style_Operation);
+                }
             }
         }
     }

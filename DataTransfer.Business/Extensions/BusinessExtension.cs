@@ -23,6 +23,7 @@ namespace DataTransfer.Business.Extensions
             services.AddScoped<IOperationService, OperationService>();
             services.AddScoped<IOperationPerformanceService, OperationPerformanceService>();
             services.AddScoped<IStyleService, StyleService>();
+            services.AddScoped<IStyle_OperationService, Style_OperationService>();
 
             //Methods
             services.AddScoped<IDataTransferMethod, DataTransferMethod>();
