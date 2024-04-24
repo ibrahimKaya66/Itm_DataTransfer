@@ -35,13 +35,14 @@ namespace DataTransfer.Api.Controllers
             {
                 string date_ = date.ToString("yyyy-MM-dd");
                 var employeeIds = Db.EmployeeIds(date_);
-                foreach (var item in employeeIds)
+                foreach (var employeeId in employeeIds)
                 {
-                    var entities = Db.OperatorPerformances();
+                    var entities = Db.OperatorPerformances(date_, employeeId);
+                    operatorPerformances.AddRange(entities);
                 }
             }
+            await dataTransferMethod.DataTransfer(operatorPerformances);
             return Ok();
-            //await dataTransferMethod.DataTransfer(entities);
             //return entities == null ? BadRequest() : Ok(entities);
         }
         [HttpGet("StyleOperation")]

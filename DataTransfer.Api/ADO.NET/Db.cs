@@ -59,7 +59,7 @@ namespace DataTransfer.Api.ADO.NET
             return models;
 
         }
-        public static List<OperatorPerformance> OperatorPerformances(string? startDate = null, string? endDate = null)
+        public static List<OperatorPerformance> OperatorPerformances(string date,int employeeId)
         {
             var config = new ConfigurationBuilder()
              .SetBasePath(Directory.GetCurrentDirectory())
@@ -74,14 +74,7 @@ namespace DataTransfer.Api.ADO.NET
                 {
                     sqlConnection.Open();
                     string conditions = string.Empty;
-                    if (string.IsNullOrEmpty(startDate) && string.IsNullOrEmpty(endDate))
-                        conditions = $" WHERE CONVERT(date, WorkersDailyProcess.CreateDate) = 'CONVERT(date, {DateTime.Now.Date})'";
-                    else if (!string.IsNullOrEmpty(startDate) && !string.IsNullOrEmpty(endDate))
-                        conditions = $" WHERE CONVERT(date, WorkersDailyProcess.CreateDate) BETWEEN '{startDate}' AND '{endDate}' ";
-                    else if (string.IsNullOrEmpty(startDate) && !string.IsNullOrEmpty(endDate))
-                        conditions = $" WHERE CONVERT(date, WorkersDailyProcess.CreateDate) <= '{endDate}' ";
-                    else if (!string.IsNullOrEmpty(startDate) && string.IsNullOrEmpty(endDate))
-                        conditions = $" WHERE CONVERT(date, WorkersDailyProcess.CreateDate) >= '{startDate}'";
+                    conditions = $" WHERE CONVERT(date, WorkersDailyProcess.CreateDate) = '{date}' && Employee_DailyProduction.Employee_id = {employeeId}";
 
                     string cmdText = @$"
                                         SELECT 
