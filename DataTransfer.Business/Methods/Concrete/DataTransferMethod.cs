@@ -186,39 +186,39 @@ namespace DataTransfer.Business.Methods.Concrete
             Department department = new Department();
             Group group = new Group();
             //department add
-            var item = models.FirstOrDefault();
-            style = await styleService.GetAsync(s => s.Name == styleName && s.ReferanceNo == item.StyleCode);
+            var tempStyle = models.FirstOrDefault();
+            style = await styleService.GetAsync(s => s.Name == styleName && s.ReferanceNo == tempStyle.StyleCode);
             if (style == null)
             {
-                customer = await customerService.GetAsync(c=>c.Name == item.CustomerName);
+                customer = await customerService.GetAsync(c=>c.Name == tempStyle.CustomerName);
                 if(customer == null)
                 {
                     customer = new Customer()
                     {
-                        Name = item.CustomerName,
+                        Name = tempStyle.CustomerName,
                         CountryId = 1,
                         CreatedDate = now
                     };
                     await customerService.AddAsync(customer);
-                    customer = await customerService.GetAsync(c => c.Name == item.CustomerName);
+                    customer = await customerService.GetAsync(c => c.Name == tempStyle.CustomerName);
                 }
-                group = await groupService.GetAsync(d => d.Name == item.CatalogGroupName);
+                group = await groupService.GetAsync(d => d.Name == tempStyle.CatalogGroupName);
                 if (group == null)
                 {
                     group = new Group()
                     {
-                        Name = item.CatalogGroupName,
+                        Name = tempStyle.CatalogGroupName,
                         GroupCodeId = 4,//catalog group
                         CreatedDate = now
                     };
                     await groupService.AddAsync(group);
-                    group = await groupService.GetAsync(d => d.Name == item.CatalogGroupName);//eklenenin Id bilgisini çek
+                    group = await groupService.GetAsync(d => d.Name == tempStyle.CatalogGroupName);//eklenenin Id bilgisini çek
                 }
 
                 style = new Style()
                 {
                     Name = styleName,
-                    ReferanceNo = item?.StyleCode,
+                    ReferanceNo = tempStyle?.StyleCode,
                     CustomerId = customer.Id,
                     StyleGroupId = 8,//bay
                     SeasonGroupId = 14,//yaz
@@ -227,37 +227,37 @@ namespace DataTransfer.Business.Methods.Concrete
                     CreatedDate = now
                 };
                 await styleService.AddAsync(style);
-                style = await styleService.GetAsync(s => s.Name == styleName && s.ReferanceNo == item.StyleCode);//eklenenin Id bilgisini çek
+                style = await styleService.GetAsync(s => s.Name == styleName && s.ReferanceNo == tempStyle.StyleCode);//eklenenin Id bilgisini çek
             }
-            foreach (var model in models)
+            foreach (var item in models)
             {
-                department = await departmentService.GetAsync(d => d.Name.ToLower() == model.DepartmentName.ToLower());
+                department = await departmentService.GetAsync(d => d.Name.ToLower() == item.DepartmentName.ToLower());
                 if (department == null)
                 {
                     department = new Department()
                     {
-                        Name = model.DepartmentName,
+                        Name = item.DepartmentName,
                         FactoryId = factory?.Id ?? 1,
                         CreatedDate = now
                     };
                     await departmentService.AddAsync(department);
-                    department = await departmentService.GetAsync(d => d.Name == model.DepartmentName);//eklenenin Id bilgisini çek
+                    department = await departmentService.GetAsync(d => d.Name == item.DepartmentName);//eklenenin Id bilgisini çek
                 }
 
-                group = await groupService.GetAsync(g => g.Name == model.OperationGroupName);
+                group = await groupService.GetAsync(g => g.Name == item.OperationGroupName);
                 if (group == null)
                 {
                     group = new Group()
                     {
-                        Name = model.OperationGroupName,
+                        Name = item.OperationGroupName,
                         GroupCodeId = 1,//catalog group
                         CreatedDate = now
                     };
                     await groupService.AddAsync(group);
-                    group = await groupService.GetAsync(g => g.Name == model.OperationGroupName);//eklenenin Id bilgisini çek
+                    group = await groupService.GetAsync(g => g.Name == item.OperationGroupName);//eklenenin Id bilgisini çek
                 }
 
-                var operation = await operationService.GetAsync(o => o.Name.ToLower() == model.OperationName && o.TimeSecond == model.TimeSecond);
+                var operation = await operationService.GetAsync(o => o.Name.ToLower() == item.OperationName && o.TimeSecond == item.TimeSecond);
                 if (operation == null)
                 {
                     int typeId = 0;
@@ -268,24 +268,24 @@ namespace DataTransfer.Business.Methods.Concrete
 
                     operation = new Operation()
                     {
-                        Name = model.OperationName,
+                        Name = item.OperationName,
                         TypeId = typeId,
                         OperationGroupId = group.Id,
                         DepartmentId = department.Id,
-                        TimeSecond = model.TimeSecond,
+                        TimeSecond = item.TimeSecond,
                         CreatedDate = now
                     };
                     await operationService.AddAsync(operation);
-                    operation = await operationService.GetAsync(o => o.Name.ToLower() == model.OperationName && o.TimeSecond == model.TimeSecond);
+                    operation = await operationService.GetAsync(o => o.Name.ToLower() == item.OperationName && o.TimeSecond == item.TimeSecond);
                 }
-                var style_Operation = await style_OperationService.GetAsync(so => so.StyleId == style.Id && so.OperationId == operation.Id && so.EntityOrder == model.EntityOrder);
+                var style_Operation = await style_OperationService.GetAsync(so => so.StyleId == style.Id && so.OperationId == operation.Id && so.EntityOrder == item.EntityOrder);
                 if (style_Operation == null) 
                 {
                     style_Operation = new Style_Operation()
                     {
                         StyleId = style.Id,
                         OperationId = operation.Id,
-                        EntityOrder = model.EntityOrder,
+                        EntityOrder = item.EntityOrder,
                         CreatedDate = now
                     };
                     await style_OperationService.AddAsync(style_Operation);
