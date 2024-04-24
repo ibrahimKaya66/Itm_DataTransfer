@@ -5,7 +5,7 @@ namespace DataTransfer.Api.ADO.NET
 {
     public static class Db
     {
-        public static List<int> EmployeeIds(DateTime date)
+        public static List<int> EmployeeIds(string date)
         {
             var config = new ConfigurationBuilder()
              .SetBasePath(Directory.GetCurrentDirectory())

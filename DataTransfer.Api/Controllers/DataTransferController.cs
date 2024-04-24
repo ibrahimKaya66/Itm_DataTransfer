@@ -33,7 +33,7 @@ namespace DataTransfer.Api.Controllers
 
             for (DateTime date = startDateTime; date <= endDateTime; date = date.AddDays(1))
             {
-                var employeeIds = Db.EmployeeIds(date);
+                var employeeIds = Db.EmployeeIds(date.ToString("dd-MM-yyyy"));
                 foreach (var item in employeeIds)
                 {
                     var entities = Db.OperatorPerformances();
