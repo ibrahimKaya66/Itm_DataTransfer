@@ -132,7 +132,8 @@ namespace DataTransfer.Business.Methods.Concrete
                 }
 
                 //operation add
-                operation = await operationService.GetAsync(o => o.Name == item.Operation_Name);
+                item.TimeSecond = Math.Round(item.TimeSecond, 2);
+                operation = await operationService.GetAsync(o => o.Name == item.Operation_Name && o.TimeSecond == item.TimeSecond);
                 if (operation == null)
                 {
                     int typeId = 0;
@@ -151,7 +152,7 @@ namespace DataTransfer.Business.Methods.Concrete
                         CreatedDate = now
                     };
                     await operationService.AddAsync(operation);
-                    operation = await operationService.GetAsync(o => o.Name == item.Operation_Name);//eklenenin Id bilgisini çek
+                    operation = await operationService.GetAsync(o => o.Name == item.Operation_Name && o.TimeSecond == item.TimeSecond);//eklenenin Id bilgisini çek
                 }
 
                 //operationPerformance add
@@ -256,8 +257,8 @@ namespace DataTransfer.Business.Methods.Concrete
                     await groupService.AddAsync(group);
                     group = await groupService.GetAsync(g => g.Name == item.OperationGroupName);//eklenenin Id bilgisini çek
                 }
-
-                var operation = await operationService.GetAsync(o => o.Name.ToLower() == item.OperationName && o.TimeSecond == item.TimeSecond);
+                item.TimeSecond = Math.Round(item.TimeSecond, 2);
+                var operation = await operationService.GetAsync(o => o.Name == item.OperationName && o.TimeSecond == item.TimeSecond);
                 if (operation == null)
                 {
                     int typeId = 0;
@@ -276,7 +277,7 @@ namespace DataTransfer.Business.Methods.Concrete
                         CreatedDate = now
                     };
                     await operationService.AddAsync(operation);
-                    operation = await operationService.GetAsync(o => o.Name.ToLower() == item.OperationName && o.TimeSecond == item.TimeSecond);
+                    operation = await operationService.GetAsync(o => o.Name == item.OperationName && o.TimeSecond == item.TimeSecond);
                 }
                 var style_Operation = await style_OperationService.GetAsync(so => so.StyleId == style.Id && so.OperationId == operation.Id && so.EntityOrder == item.EntityOrder);
                 if (style_Operation == null) 
