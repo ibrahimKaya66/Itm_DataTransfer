@@ -5,6 +5,60 @@ namespace DataTransfer.Api.ADO.NET
 {
     public static class Db
     {
+        public static List<int> EmployeeIds(DateTime date)
+        {
+            var config = new ConfigurationBuilder()
+             .SetBasePath(Directory.GetCurrentDirectory())
+             .AddJsonFile("appsettings.json")
+             .Build();
+
+            string? sqlConnectionString = config["AppSettings:DefaultConnection"];
+            var models = new List<int>();
+            using (var sqlConnection = new SqlConnection(sqlConnectionString))
+            {
+                try
+                {
+                    sqlConnection.Open();
+                    string conditions = string.Empty;
+                    conditions = $" WHERE CONVERT(date, WorkersDailyProcess.CreateDate) = '{date}'";
+
+                    string cmdText = @$"
+                                        SELECT distinct
+                                        Employee_DailyProduction.Employee_id
+                                        FROM     WokerLine_OrdersRouting WITH (nolock) INNER JOIN
+                                                          Balance_Model WITH (nolock) ON WokerLine_OrdersRouting.Model_Balance_Id = Balance_Model.Id INNER JOIN
+                                                          Balance_Model_Operation WITH (nolock) ON Balance_Model.Id = Balance_Model_Operation.Model_Balance_Id INNER JOIN
+                                                          BalanceOperationCode_List WITH (nolock) ON Balance_Model_Operation.Id = BalanceOperationCode_List.BalanceModelOperation_Id INNER JOIN
+                                                          WorkersDailyProcess WITH (nolock) ON BalanceOperationCode_List.Id = WorkersDailyProcess.BalanceOperationCode_Id INNER JOIN
+                                                          Employee_DailyProduction ON WorkersDailyProcess.Employee_DailyProduction_Id = Employee_DailyProduction.Id INNER JOIN
+                                                          Employees ON Employee_DailyProduction.Employee_id = Employees.Id  INNER JOIN
+				                                          Worker_Line with (nolock) on WokerLine_OrdersRouting.Line_Id = Worker_Line.Id INNER JOIN
+				                                          Groups on Balance_Model_Operation.Group_Id = Groups.Groups_id INNER JOIN
+				                                          Department ON Balance_Model_Operation.Department_Id = Department.Id  INNER JOIN
+				                                          Machine with (nolock) on Balance_Model_Operation.Machine_id = Machine.Machine_id INNER JOIN
+				                                          Job_Title with (nolock) on Employees.Job_title_id = Job_title.Job_id
+                                        {conditions}
+                              ";
+
+                    using (var sqlCommand = new SqlCommand(cmdText, sqlConnection))
+                    {
+                        SqlDataReader reader = sqlCommand.ExecuteReader();
+                        while (reader.Read())
+                        {
+                            int model = reader.GetInt32(0);
+                            models.Add(model);
+                        }
+                        reader.Close();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Bağlantı hatası: " + ex.Message);
+                }
+            }
+            return models;
+
+        }
         public static List<OperatorPerformance> OperatorPerformances(string? startDate = null, string? endDate = null)
         {
             var config = new ConfigurationBuilder()
