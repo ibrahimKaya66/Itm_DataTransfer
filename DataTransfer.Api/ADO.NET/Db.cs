@@ -74,7 +74,7 @@ namespace DataTransfer.Api.ADO.NET
                 {
                     sqlConnection.Open();
                     string conditions = string.Empty;
-                    conditions = $" WHERE CONVERT(date, WorkersDailyProcess.CreateDate) = '{date}' && Employee_DailyProduction.Employee_id = {employeeId}";
+                    conditions = $" WHERE CONVERT(date, WorkersDailyProcess.CreateDate) = '{date}' and Employee_DailyProduction.Employee_id = {employeeId}";
 
                     string cmdText = @$"
                                         SELECT 
