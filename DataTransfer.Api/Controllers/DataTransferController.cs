@@ -42,8 +42,7 @@ namespace DataTransfer.Api.Controllers
                 }
             }
             await dataTransferMethod.DataTransfer(operatorPerformances);
-            return Ok();
-            //return entities == null ? BadRequest() : Ok(entities);
+            return operatorPerformances == null ? BadRequest() : Ok(operatorPerformances);
         }
         [HttpGet("StyleOperation")]
         public async Task<IActionResult> GetStyleOperations(string styleName)
