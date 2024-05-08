@@ -15,12 +15,13 @@ namespace DataTransfer.Business.Methods.Concrete
         private readonly IGroupService groupService;
         private readonly IJobService jobService;
         private readonly ILineService lineService;
+        private readonly IMachineService machineService;
         private readonly IOperationPerformanceService operationPerformanceService;
         private readonly IOperationService operationService;
         private readonly IStyleService styleService;
         private readonly IStyle_OperationService style_OperationService;
 
-        public DataTransferMethod(ICustomerService customerService, IDepartmentService departmentService, IEmployeeService employeeService, IFactoryService factoryService, IGroupCodeService groupCodeService, IGroupService groupService, IJobService jobService, ILineService lineService, IOperationPerformanceService operationPerformanceService, IOperationService operationService, IStyleService styleService, IStyle_OperationService style_OperationService)
+        public DataTransferMethod(ICustomerService customerService, IDepartmentService departmentService, IEmployeeService employeeService, IFactoryService factoryService, IGroupCodeService groupCodeService, IGroupService groupService, IJobService jobService, ILineService lineService, IMachineService machineService, IOperationPerformanceService operationPerformanceService, IOperationService operationService, IStyleService styleService, IStyle_OperationService style_OperationService)
         {
             this.customerService = customerService;
             this.departmentService = departmentService;
@@ -30,6 +31,7 @@ namespace DataTransfer.Business.Methods.Concrete
             this.groupService = groupService;
             this.jobService = jobService;
             this.lineService = lineService;
+            this.machineService = machineService;
             this.operationPerformanceService = operationPerformanceService;
             this.operationService = operationService;
             this.styleService = styleService;
@@ -42,11 +44,13 @@ namespace DataTransfer.Business.Methods.Concrete
             Employee employee = new Employee();
             GroupCode groupCode = new GroupCode();
             Group group = new Group();
+            Group machineGroup = new Group();
             Job job = new Job();
             Line line = new Line();
             Machine machine = new Machine();
             OperationPerformance? operationPerformance = new OperationPerformance();
             Operation operation = new Operation();
+            
 
             DateTime utcNow = DateTime.UtcNow;
             var factory = factoryService.GetAll().FirstOrDefault();
@@ -132,6 +136,34 @@ namespace DataTransfer.Business.Methods.Concrete
                     line = await lineService.GetAsync(l => l.Name == item.Line_Name);//eklenenin Id bilgisini çek
                 }
 
+                //machineGroup add
+                machineGroup = await groupService.GetAsync(g => g.Name == item.MachineGroup_Name);
+                if (machineGroup == null)
+                {
+                    machineGroup = new Group()
+                    {
+                        Name = item.MachineGroup_Name,
+                        GroupCodeId = 2,//groupCode: 2 =>machine
+                        CreatedDate = now
+                    };
+                    await groupService.AddAsync(machineGroup);
+                    machineGroup = await groupService.GetAsync(g => g.Name == item.MachineGroup_Name);//eklenenin Id bilgisini çek
+                }
+
+                //machine add
+                machine = await machineService.GetAsync(m => m.Name == item.Machine_Name);
+                if (machine == null)
+                {
+                    machine = new Machine()
+                    {
+                        Name = item.Machine_Name,
+                        MachineGroupId = machineGroup.Id,
+                        CreatedDate = now
+                    };
+                    await machineService.AddAsync(machine);
+                    machine = await machineService.GetAsync(m => m.Name == item.Machine_Name);//eklenenin Id bilgisini çek
+                }
+
                 //operation add
                 item.TimeSecond = Math.Round(item.TimeSecond, 2);
                 operation = await operationService.GetAsync(o => o.Name == item.Operation_Name && o.TimeSecond == item.TimeSecond);
@@ -148,6 +180,7 @@ namespace DataTransfer.Business.Methods.Concrete
                         Name = item.Operation_Name,
                         TypeId = typeId,
                         OperationGroupId = group.Id,
+                        MachineId = machine.Id,
                         DepartmentId = department.Id,
                         TimeSecond = item.TimeSecond,
                         CreatedDate = now
@@ -187,6 +220,7 @@ namespace DataTransfer.Business.Methods.Concrete
             Customer customer = new Customer();
             Department department = new Department();
             Group group = new Group();
+            Group machineGroup = new Group();
             Machine machine = new Machine();
             //department add
             var tempStyle = models.FirstOrDefault();
@@ -259,6 +293,35 @@ namespace DataTransfer.Business.Methods.Concrete
                     await groupService.AddAsync(group);
                     group = await groupService.GetAsync(g => g.Name == item.OperationGroupName);//eklenenin Id bilgisini çek
                 }
+
+                //machineGroup add
+                machineGroup = await groupService.GetAsync(g => g.Name == item.MachineGroup_Name);
+                if (machineGroup == null)
+                {
+                    machineGroup = new Group()
+                    {
+                        Name = item.MachineGroup_Name,
+                        GroupCodeId = 2,//groupCode: 2 =>machine
+                        CreatedDate = now
+                    };
+                    await groupService.AddAsync(machineGroup);
+                    machineGroup = await groupService.GetAsync(g => g.Name == item.MachineGroup_Name);//eklenenin Id bilgisini çek
+                }
+
+                //machine add
+                machine = await machineService.GetAsync(m => m.Name == item.Machine_Name);
+                if (machine == null)
+                {
+                    machine = new Machine()
+                    {
+                        Name = item.Machine_Name,
+                        MachineGroupId = machineGroup.Id,
+                        CreatedDate = now
+                    };
+                    await machineService.AddAsync(machine);
+                    machine = await machineService.GetAsync(m => m.Name == item.Machine_Name);//eklenenin Id bilgisini çek
+                }
+
                 item.TimeSecond = Math.Round(item.TimeSecond, 2);
                 var operation = await operationService.GetAsync(o => o.Name == item.OperationName && o.TimeSecond == item.TimeSecond);
                 if (operation == null)
@@ -274,6 +337,7 @@ namespace DataTransfer.Business.Methods.Concrete
                         Name = item.OperationName,
                         TypeId = typeId,
                         OperationGroupId = group.Id,
+                        MachineId = machine.Id,
                         DepartmentId = department.Id,
                         TimeSecond = item.TimeSecond,
                         CreatedDate = now

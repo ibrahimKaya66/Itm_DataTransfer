@@ -6,5 +6,6 @@
         public string Name { get; set; }
         public int MachineGroupId { get; set; }
         public Group MachineGroup { get; set; }
+        public DateTime CreatedDate { get; set; }
     }
 }

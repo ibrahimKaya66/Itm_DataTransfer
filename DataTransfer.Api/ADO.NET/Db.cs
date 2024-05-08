@@ -90,6 +90,8 @@ namespace DataTransfer.Api.ADO.NET
                                         Groups.Group_Name,
                                         Department.Depart_Name,
                                         Machine.Machine_Type,   -- Makine tipi gösteriyor.  EL = HAND OLARAK DÖNÜYOR. MAKİNE = MACH OLARAK DÖNÜYOR 
+                                        Machine.Machine_name,
+                                        MachineGroups.Group_Name as MachineGroupName,
                                         (SUM(WorkersDailyProcess.Real_Amount * Balance_Model_Operation.OperationToplamSTD)) / nullif((SUM(DATEDIFF(MINUTE, WorkersDailyProcess.Start_time, ISNULL(WorkersDailyProcess.End_time, CONVERT(time,WorkersDailyProcess.LastRead_Date))))),0) as Performans
                                         FROM     WokerLine_OrdersRouting WITH (nolock) INNER JOIN
                                                           Balance_Model WITH (nolock) ON WokerLine_OrdersRouting.Model_Balance_Id = Balance_Model.Id INNER JOIN
@@ -102,7 +104,10 @@ namespace DataTransfer.Api.ADO.NET
 				                                          Groups on Balance_Model_Operation.Group_Id = Groups.Groups_id INNER JOIN
 				                                          Department ON Balance_Model_Operation.Department_Id = Department.Id  INNER JOIN
 				                                          Machine with (nolock) on Balance_Model_Operation.Machine_id = Machine.Machine_id INNER JOIN
-				                                          Job_Title with (nolock) on Employees.Job_title_id = Job_title.Job_id
+				                                          Job_Title with (nolock) on Employees.Job_title_id = Job_title.Job_id INNER JOIN
+				                                          Model_Orders with (nolock) on WokerLine_OrdersRouting.Order_Id = Model_Orders.Order_id INNER JOIN
+				                                          Model with (nolock) on Model_Orders.Model_id = Model.Id INNER JOIN
+				                                          Groups as MachineGroups with (nolock) on Machine.Machine_Group_id = MachineGroups.Groups_id
                                         {conditions} 
                                         GROUP BY  
                                         Employees.Employee_Name,
@@ -116,7 +121,9 @@ namespace DataTransfer.Api.ADO.NET
                                         Groups.Group_Type,
                                         Department.Depart_Name,
                                         Groups.Group_Name,
-                                        Machine.Machine_Type
+                                        Machine.Machine_Type,
+                                        Machine.Machine_name,
+                                        MachineGroups.Group_Name
                                         order by 
                                         Balance_Model_Operation.Operation_Name
                         ";
@@ -139,7 +146,9 @@ namespace DataTransfer.Api.ADO.NET
                             model.Group_Name = reader[9]?.ToString() ?? "";
                             model.Department_Name = reader[10]?.ToString() ?? "";
                             model.Operation_Type = reader[11]?.ToString() ?? "";
-                            model.Performance = reader.GetDecimal(12);
+                            model.Machine_Name = reader[12]?.ToString() ?? null;
+                            model.MachineGroup_Name = reader[13]?.ToString() ?? null;
+                            model.Performance = reader.GetDecimal(14);
                             models.Add(model);
                         }
                         reader.Close();
@@ -182,7 +191,9 @@ namespace DataTransfer.Api.ADO.NET
                                         Customers.Customer_Name,
                                         Machine.Machine_Type as OperationType ,
                                         Department.Depart_Name,
-                                        OperationGroups.Group_Name as OperationGroupName
+                                        OperationGroups.Group_Name as OperationGroupName,
+                                        Machine.Machine_name,
+                                        MachineGroups.Group_Name as MachineGroupName
                                         from Operation
                                         inner join Model with (nolock) on Operation.Model_id = Model.Id
                                         inner join Groups with (nolock) on Model.Group_Id = Groups.Groups_id
@@ -190,6 +201,7 @@ namespace DataTransfer.Api.ADO.NET
                                         inner join Machine with (nolock) on Operation.Machine_id = Machine.Machine_id
                                         inner join Department with(nolock) on Operation.Department_Id = Department.Id
                                         inner join Groups as OperationGroups with(nolock) on Operation.Operation_Groups = OperationGroups.Groups_id
+                                        inner join Groups as MachineGroups with (nolock) on Machine.Machine_Group_id = MachineGroups.Groups_id
                                         {conditions}
                                         order by 
                                         Operation.Oper_Sequence
@@ -211,6 +223,8 @@ namespace DataTransfer.Api.ADO.NET
                             model.OperationType = reader[7]?.ToString() ?? "";
                             model.DepartmentName = reader[8]?.ToString() ?? "";
                             model.OperationGroupName = reader[9]?.ToString() ?? "";
+                            model.Machine_Name = reader[10]?.ToString() ?? null;
+                            model.MachineGroup_Name = reader[11]?.ToString() ?? null;
                             models.Add(model);
                         }
                         reader.Close();
