@@ -12,5 +12,7 @@
         public string? OperationType { get; set; }
         public string? DepartmentName { get; set; }
         public string? OperationGroupName { get; set; }
+        public string? Machine_Name { get; set; }
+        public string? MachineGroup_Name { get; set; }
     }
 }

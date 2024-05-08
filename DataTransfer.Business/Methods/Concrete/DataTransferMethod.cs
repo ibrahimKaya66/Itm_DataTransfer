@@ -44,6 +44,7 @@ namespace DataTransfer.Business.Methods.Concrete
             Group group = new Group();
             Job job = new Job();
             Line line = new Line();
+            Machine machine = new Machine();
             OperationPerformance? operationPerformance = new OperationPerformance();
             Operation operation = new Operation();
 
@@ -186,6 +187,7 @@ namespace DataTransfer.Business.Methods.Concrete
             Customer customer = new Customer();
             Department department = new Department();
             Group group = new Group();
+            Machine machine = new Machine();
             //department add
             var tempStyle = models.FirstOrDefault();
             style = await styleService.GetAsync(s => s.Name == styleName && s.ReferanceNo == tempStyle.StyleCode);

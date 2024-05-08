@@ -32,6 +32,7 @@ namespace DataTransfer.Dal.Context
         public DbSet<GroupCode> GroupCodes { get; set; }
         public DbSet<Job> Jobs{ get; set; }
         public DbSet<Line> Lines { get; set; }
+        public DbSet<Machine> Machines { get; set; }
         public DbSet<Operation> Operations { get; set; }
         public DbSet<OperationPerformance> OperationPerformances { get; set; }
         public DbSet<Style> Styles { get; set; }

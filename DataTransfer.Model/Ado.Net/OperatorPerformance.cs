@@ -14,6 +14,8 @@
         public string? Group_Name { get; set; }
         public string? GroupCode_Name { get; set; }
         public string? Department_Name { get; set; }
+        public string? Machine_Name { get; set; }
+        public string? MachineGroup_Name { get; set; }
         public decimal Performance { get; set; }
     }
 }

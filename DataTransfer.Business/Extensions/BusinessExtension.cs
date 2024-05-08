@@ -20,6 +20,7 @@ namespace DataTransfer.Business.Extensions
             services.AddScoped<IGroupCodeService, GroupCodeService>();
             services.AddScoped<IJobService, JobService>();
             services.AddScoped<ILineService, LineService>();
+            services.AddScoped<IMachineService, MachineService>();
             services.AddScoped<IOperationService, OperationService>();
             services.AddScoped<IOperationPerformanceService, OperationPerformanceService>();
             services.AddScoped<IStyleService, StyleService>();

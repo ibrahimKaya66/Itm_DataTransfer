@@ -9,6 +9,8 @@ namespace DataTransfer.Model.Entities
         public int TypeId { get; set; }
         public int OperationGroupId { get; set; }
         public Group OperationGroup { get; set; }
+        public int? MachineId { get; set; }
+        public Machine? Machine { get; set; }
         public int DepartmentId { get; set; }
         public Department Department { get; set; }
         [DisplayName("Süre(sn)")]
