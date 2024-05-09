@@ -107,7 +107,7 @@ namespace DataTransfer.Business.Methods.Concrete
                 groupCode = await groupCodeService.GetAsync(g => g.Name == "operasyon");
 
                 //group add
-                group = await groupService.GetAsync(g => g.Name == item.Group_Name);
+                group = await groupService.GetAsync(g => g.Name == item.Group_Name && g.GroupCodeId == groupCode.Id);
                 if (group == null)
                 {
                     group = new Group()
@@ -117,11 +117,11 @@ namespace DataTransfer.Business.Methods.Concrete
                         CreatedDate = now
                     };
                     await groupService.AddAsync(group);
-                    group = await groupService.GetAsync(g => g.Name == item.Group_Name);//eklenenin Id bilgisini çek
+                    group = await groupService.GetAsync(g => g.Name == item.Group_Name && g.GroupCodeId == groupCode.Id);//eklenenin Id bilgisini çek
                 }
 
                 //line add
-                line = await lineService.GetAsync(l => l.Name == item.Line_Name);
+                line = await lineService.GetAsync(l => l.Name == item.Line_Name && l.DepartmentId == department.Id);
                 if (line == null)
                 {
                     line = new Line()
@@ -133,11 +133,11 @@ namespace DataTransfer.Business.Methods.Concrete
                         CreatedDate = now
                     };
                     await lineService.AddAsync(line);
-                    line = await lineService.GetAsync(l => l.Name == item.Line_Name);//eklenenin Id bilgisini çek
+                    line = await lineService.GetAsync(l => l.Name == item.Line_Name && l.DepartmentId == department.Id);//eklenenin Id bilgisini çek
                 }
 
                 //machineGroup add
-                machineGroup = await groupService.GetAsync(g => g.Name == item.MachineGroup_Name);
+                machineGroup = await groupService.GetAsync(g => g.Name == item.MachineGroup_Name && g.GroupCodeId == 2);
                 if (machineGroup == null)
                 {
                     machineGroup = new Group()
@@ -147,11 +147,11 @@ namespace DataTransfer.Business.Methods.Concrete
                         CreatedDate = now
                     };
                     await groupService.AddAsync(machineGroup);
-                    machineGroup = await groupService.GetAsync(g => g.Name == item.MachineGroup_Name);//eklenenin Id bilgisini çek
+                    machineGroup = await groupService.GetAsync(g => g.Name == item.MachineGroup_Name && g.GroupCodeId == 2);//eklenenin Id bilgisini çek
                 }
 
                 //machine add
-                machine = await machineService.GetAsync(m => m.Name == item.Machine_Name);
+                machine = await machineService.GetAsync(m => m.Name == item.Machine_Name && m.MachineGroupId == machineGroup.Id);
                 if (machine == null)
                 {
                     machine = new Machine()
@@ -161,12 +161,12 @@ namespace DataTransfer.Business.Methods.Concrete
                         CreatedDate = now
                     };
                     await machineService.AddAsync(machine);
-                    machine = await machineService.GetAsync(m => m.Name == item.Machine_Name);//eklenenin Id bilgisini çek
+                    machine = await machineService.GetAsync(m => m.Name == item.Machine_Name && m.MachineGroupId == machineGroup.Id);//eklenenin Id bilgisini çek
                 }
 
                 //operation add
                 item.TimeSecond = Math.Round(item.TimeSecond, 2);
-                operation = await operationService.GetAsync(o => o.Name == item.Operation_Name && o.TimeSecond == item.TimeSecond);
+                operation = await operationService.GetAsync(o => o.Name == item.Operation_Name && o.TimeSecond == item.TimeSecond && o.MachineId == machine.Id);
                 if (operation == null)
                 {
                     int typeId = 0;
@@ -186,7 +186,7 @@ namespace DataTransfer.Business.Methods.Concrete
                         CreatedDate = now
                     };
                     await operationService.AddAsync(operation);
-                    operation = await operationService.GetAsync(o => o.Name == item.Operation_Name && o.TimeSecond == item.TimeSecond);//eklenenin Id bilgisini çek
+                    operation = await operationService.GetAsync(o => o.Name == item.Operation_Name && o.TimeSecond == item.TimeSecond && o.MachineId == machine.Id);//eklenenin Id bilgisini çek
                 }
 
                 //operationPerformance add
@@ -239,7 +239,7 @@ namespace DataTransfer.Business.Methods.Concrete
                     await customerService.AddAsync(customer);
                     customer = await customerService.GetAsync(c => c.Name == tempStyle.CustomerName);
                 }
-                group = await groupService.GetAsync(d => d.Name == tempStyle.CatalogGroupName);
+                group = await groupService.GetAsync(d => d.Name == tempStyle.CatalogGroupName && d.GroupCodeId == 4);
                 if (group == null)
                 {
                     group = new Group()
@@ -249,7 +249,7 @@ namespace DataTransfer.Business.Methods.Concrete
                         CreatedDate = now
                     };
                     await groupService.AddAsync(group);
-                    group = await groupService.GetAsync(d => d.Name == tempStyle.CatalogGroupName);//eklenenin Id bilgisini çek
+                    group = await groupService.GetAsync(d => d.Name == tempStyle.CatalogGroupName && d.GroupCodeId == 4);//eklenenin Id bilgisini çek
                 }
 
                 style = new Style()
@@ -281,7 +281,7 @@ namespace DataTransfer.Business.Methods.Concrete
                     department = await departmentService.GetAsync(d => d.Name == item.DepartmentName);//eklenenin Id bilgisini çek
                 }
 
-                group = await groupService.GetAsync(g => g.Name == item.OperationGroupName);
+                group = await groupService.GetAsync(g => g.Name == item.OperationGroupName && g.GroupCodeId == 1);
                 if (group == null)
                 {
                     group = new Group()
@@ -291,11 +291,11 @@ namespace DataTransfer.Business.Methods.Concrete
                         CreatedDate = now
                     };
                     await groupService.AddAsync(group);
-                    group = await groupService.GetAsync(g => g.Name == item.OperationGroupName);//eklenenin Id bilgisini çek
+                    group = await groupService.GetAsync(g => g.Name == item.OperationGroupName && g.GroupCodeId == 1);//eklenenin Id bilgisini çek
                 }
 
                 //machineGroup add
-                machineGroup = await groupService.GetAsync(g => g.Name == item.MachineGroup_Name);
+                machineGroup = await groupService.GetAsync(g => g.Name == item.MachineGroup_Name && g.GroupCodeId == 2);
                 if (machineGroup == null)
                 {
                     machineGroup = new Group()
@@ -305,11 +305,11 @@ namespace DataTransfer.Business.Methods.Concrete
                         CreatedDate = now
                     };
                     await groupService.AddAsync(machineGroup);
-                    machineGroup = await groupService.GetAsync(g => g.Name == item.MachineGroup_Name);//eklenenin Id bilgisini çek
+                    machineGroup = await groupService.GetAsync(g => g.Name == item.MachineGroup_Name && g.GroupCodeId == 2);//eklenenin Id bilgisini çek
                 }
 
                 //machine add
-                machine = await machineService.GetAsync(m => m.Name == item.Machine_Name);
+                machine = await machineService.GetAsync(m => m.Name == item.Machine_Name && m.MachineGroupId == machineGroup.Id);
                 if (machine == null)
                 {
                     machine = new Machine()
@@ -319,11 +319,11 @@ namespace DataTransfer.Business.Methods.Concrete
                         CreatedDate = now
                     };
                     await machineService.AddAsync(machine);
-                    machine = await machineService.GetAsync(m => m.Name == item.Machine_Name);//eklenenin Id bilgisini çek
+                    machine = await machineService.GetAsync(m => m.Name == item.Machine_Name && m.MachineGroupId == machineGroup.Id);//eklenenin Id bilgisini çek
                 }
 
                 item.TimeSecond = Math.Round(item.TimeSecond, 2);
-                var operation = await operationService.GetAsync(o => o.Name == item.OperationName && o.TimeSecond == item.TimeSecond);
+                var operation = await operationService.GetAsync(o => o.Name == item.OperationName && o.TimeSecond == item.TimeSecond && o.MachineId == machine.Id);
                 if (operation == null)
                 {
                     int typeId = 0;
@@ -343,7 +343,7 @@ namespace DataTransfer.Business.Methods.Concrete
                         CreatedDate = now
                     };
                     await operationService.AddAsync(operation);
-                    operation = await operationService.GetAsync(o => o.Name == item.OperationName && o.TimeSecond == item.TimeSecond);
+                    operation = await operationService.GetAsync(o => o.Name == item.OperationName && o.TimeSecond == item.TimeSecond && o.MachineId == machine.Id);
                 }
                 var style_Operation = await style_OperationService.GetAsync(so => so.StyleId == style.Id && so.OperationId == operation.Id && so.EntityOrder == item.EntityOrder);
                 if (style_Operation == null) 
@@ -356,6 +356,7 @@ namespace DataTransfer.Business.Methods.Concrete
                         CreatedDate = now
                     };
                     await style_OperationService.AddAsync(style_Operation);
+                    style_Operation = await style_OperationService.GetAsync(so => so.StyleId == style.Id && so.OperationId == operation.Id && so.EntityOrder == item.EntityOrder);
                 }
             }
         }
