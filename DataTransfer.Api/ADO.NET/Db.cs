@@ -181,7 +181,7 @@ namespace DataTransfer.Api.ADO.NET
 
                     if (int.TryParse(idOrName, out int id))
                     {
-                        conditions = $" WHERE Model.Id = '{idOrName}' ";
+                        conditions = $" WHERE Model.Id = {id} ";
                     }
                     else
                     {
