@@ -45,10 +45,10 @@ namespace DataTransfer.Api.Controllers
             return operatorPerformances == null ? BadRequest() : Ok(operatorPerformances);
         }
         [HttpGet("StyleOperation")]
-        public async Task<IActionResult> GetStyleOperations(string styleName)
+        public async Task<IActionResult> GetStyleOperations(string idOrName)
         {
-            var entities = Db.StyleOperations(styleName);
-            await dataTransferMethod.StyleOperations(styleName,entities);
+            var entities = Db.StyleOperations(idOrName);
+            await dataTransferMethod.StyleOperations(entities);
             return entities == null ? BadRequest() : Ok(entities);
         }
     }

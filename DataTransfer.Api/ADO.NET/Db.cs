@@ -1,5 +1,6 @@
 ﻿using DataTransfer.Model.Ado.Net;
 using System.Data.SqlClient;
+using System.Security.Cryptography.X509Certificates;
 
 namespace DataTransfer.Api.ADO.NET
 {
@@ -162,7 +163,7 @@ namespace DataTransfer.Api.ADO.NET
             return models;
 
         }
-        public static List<StyleOperation> StyleOperations(string styleName)
+        public static List<StyleOperation> StyleOperations(string idOrName)
         {
             var config = new ConfigurationBuilder()
              .SetBasePath(Directory.GetCurrentDirectory())
@@ -178,8 +179,15 @@ namespace DataTransfer.Api.ADO.NET
                     sqlConnection.Open();
                     string conditions = string.Empty;
 
-                    conditions = $" WHERE Model.Model_Name = '{styleName}' ";
-
+                    if (int.TryParse(idOrName, out int id))
+                    {
+                        conditions = $" WHERE Model.Id = '{idOrName}' ";
+                    }
+                    else
+                    {
+                        conditions = $" WHERE Model.Model_Name = '{idOrName}' ";
+                    }
+                    
                     string cmdText = @$"
                                         select 
                                         Operation.Oper_Sequence,

@@ -209,7 +209,7 @@ namespace DataTransfer.Business.Methods.Concrete
             }
             
         }
-        public async Task StyleOperations(string styleName, List<StyleOperation> models)
+        public async Task StyleOperations(List<StyleOperation> models)
         {
             DateTime utcNow = DateTime.UtcNow;
             var factory = factoryService.GetAll().FirstOrDefault();
@@ -224,7 +224,9 @@ namespace DataTransfer.Business.Methods.Concrete
             Machine machine = new Machine();
             //department add
             var tempStyle = models.FirstOrDefault();
-            style = await styleService.GetAsync(s => s.Name == styleName && s.ReferanceNo == tempStyle.StyleCode);
+
+            var style_name = models.FirstOrDefault()?.StyleName;
+            style = await styleService.GetAsync(s => s.Name == style_name && s.ReferanceNo == tempStyle.StyleCode);
             if (style == null)
             {
                 customer = await customerService.GetAsync(c=>c.Name == tempStyle.CustomerName);
@@ -254,7 +256,7 @@ namespace DataTransfer.Business.Methods.Concrete
 
                 style = new Style()
                 {
-                    Name = styleName,
+                    Name = style_name,
                     ReferanceNo = tempStyle?.StyleCode,
                     CustomerId = customer.Id,
                     StyleGroupId = 8,//bay
@@ -264,7 +266,7 @@ namespace DataTransfer.Business.Methods.Concrete
                     CreatedDate = now
                 };
                 await styleService.AddAsync(style);
-                style = await styleService.GetAsync(s => s.Name == styleName && s.ReferanceNo == tempStyle.StyleCode);//eklenenin Id bilgisini çek
+                style = await styleService.GetAsync(s => s.Name == style_name && s.ReferanceNo == tempStyle.StyleCode);//eklenenin Id bilgisini çek
             }
             foreach (var item in models)
             {
